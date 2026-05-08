@@ -22,7 +22,6 @@ export function GuideHeader({ guide, onReset }: GuideHeaderProps) {
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className="mb-8"
     >
-      {/* Barra superior — navegação */}
       <div className="flex items-center justify-between mb-8">
         <button
           onClick={onReset}

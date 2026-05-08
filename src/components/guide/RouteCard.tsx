@@ -1,10 +1,3 @@
-// ─────────────────────────────────────────────
-// RouteCard.tsx — Card de um dia do roteiro
-//
-// Exibe as paradas do dia agrupadas por período.
-// Clique em qualquer parada abre no Google Maps.
-// ─────────────────────────────────────────────
-
 import { motion } from 'motion/react'
 import { mapsLink } from '../../lib/deeplinks'
 import type { RouteDay } from '../../types/guide'

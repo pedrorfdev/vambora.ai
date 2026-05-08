@@ -38,10 +38,10 @@ export function GuideView({ guide, onReset }: GuideViewProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      className="min-h-dvh"
+      className="min-h-dvh flex justify-center"
     >
       {/* Container principal */}
-      <div className="max-w-5xl mx-auto px-4 py-10">
+      <div className="w-full p-8 py-10">
 
         {/* Header — destino, período, dica golden */}
         <GuideHeader guide={guide} onReset={onReset} />
@@ -49,7 +49,7 @@ export function GuideView({ guide, onReset }: GuideViewProps) {
         <hr className="divider mb-8" />
 
         {/* Layout duas colunas */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
+        <main className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
 
           {/* ── Coluna esquerda — roteiro ── */}
           <div>
@@ -98,17 +98,17 @@ export function GuideView({ guide, onReset }: GuideViewProps) {
             )}
 
           </div>
-        </div>
+        </main>
 
         {/* Footer do guia */}
-        <div className="mt-12 pt-8 border-t border-black-border flex flex-col items-center gap-3">
+        <footer className="border-t border-black-border flex flex-col items-center gap-3">
           <p className="text-xs text-text-muted text-center">
             Guia gerado por IA · As informações podem variar · Confirme datas e preços antes de reservar
           </p>
           <button onClick={onReset} className="btn-outline text-sm">
             ✈ Planejar nova viagem
           </button>
-        </div>
+        </footer>
 
       </div>
     </motion.div>
