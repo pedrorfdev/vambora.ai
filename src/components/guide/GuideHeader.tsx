@@ -34,7 +34,6 @@ export function GuideHeader({ guide, onReset }: GuideHeaderProps) {
         </span>
       </div>
 
-      {/* Destino principal */}
       <div className="mb-6">
         <div className="flex items-baseline gap-3 flex-wrap">
           <h1 className="text-serif text-5xl font-normal text-text-primary tracking-tight">
@@ -49,7 +48,6 @@ export function GuideHeader({ guide, onReset }: GuideHeaderProps) {
         </p>
       </div>
 
-      {/* Período + clima */}
       <div className="flex flex-wrap gap-3 mb-6">
         <div className="badge-blue text-xs">
           📅 {periodo.data_inicio} → {periodo.data_fim} · {periodo.total_dias} dias
@@ -62,7 +60,6 @@ export function GuideHeader({ guide, onReset }: GuideHeaderProps) {
         </div>
       </div>
 
-      {/* Destaques */}
       <div className="flex flex-wrap gap-2 mb-8">
         {destino.destaques.map(d => (
           <span
@@ -78,7 +75,6 @@ export function GuideHeader({ guide, onReset }: GuideHeaderProps) {
         ))}
       </div>
 
-      {/* Dica golden — destaque especial */}
       <motion.div
         initial={{ opacity: 0, x: -16 }}
         animate={{ opacity: 1, x: 0 }}

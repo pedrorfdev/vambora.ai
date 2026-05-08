@@ -24,8 +24,18 @@ const LOADING_MESSAGES = [
   'Descobrindo trilhas secretas...',
 ]
 
-function getRandomMessage(exclude?: string): string {
-  const filtered = LOADING_MESSAGES.filter(m => m !== exclude)
+const ADAPT_MESSAGES = [
+  'Ajustando o roteiro...',
+  'Ouvindo seu feedback...',
+  'Reorganizando as paradas...',
+  'Consultando os mapas de novo...',
+  'Refinando as dicas...',
+  'Quase lá, adaptando tudo...',
+  'Deixando do seu jeito...',
+]
+
+function getRandomMessage(list: string[], exclude?: string): string {
+  const filtered = list.filter(m => m !== exclude)
   return filtered[Math.floor(Math.random() * filtered.length)]
 }
 
@@ -34,9 +44,11 @@ interface UseGuideReturn {
   guide: Guide | null
   error: string | null
   loadingMessage: string
+  isAdapting: boolean
   prompt: string
   setPrompt: (p: string) => void
   generate: () => Promise<void>
+  adapt: (instruction: string) => Promise<void>
   reset: () => void
 }
 
@@ -46,14 +58,15 @@ export function useGuide(): UseGuideReturn {
   const [error, setError] = useState<string | null>(null)
   const [prompt, setPrompt] = useState('')
   const [loadingMessage, setLoadingMessage] = useState(LOADING_MESSAGES[0])
+  const [isAdapting, setIsAdapting] = useState(false)
 
   const messageInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const startMessageRotation = useCallback(() => {
-    let current = getRandomMessage()
+  const startMessageRotation = useCallback((list = LOADING_MESSAGES) => {
+    let current = getRandomMessage(list)
     setLoadingMessage(current)
     messageInterval.current = setInterval(() => {
-      current = getRandomMessage(current)
+      current = getRandomMessage(list, current)
       setLoadingMessage(current)
     }, 2200)
   }, [])
@@ -65,7 +78,7 @@ export function useGuide(): UseGuideReturn {
     }
   }, [])
 
-  // Fix: lê prompt do estado, não de parâmetro
+  // ── Geração inicial ───────────────────────────
   const generate = useCallback(async () => {
     const text = prompt.trim()
     if (!text) return
@@ -73,22 +86,52 @@ export function useGuide(): UseGuideReturn {
     setStatus('loading')
     setError(null)
     setGuide(null)
-    startMessageRotation()
+    startMessageRotation(LOADING_MESSAGES)
 
     try {
       const result = await generateGuideStream(text)
       setGuide(result)
       setStatus('success')
     } catch (err) {
-      const message = err instanceof Error
-        ? err.message
-        : 'Algo deu errado. Tenta de novo!'
-      setError(message)
+      setError(err instanceof Error ? err.message : 'Algo deu errado. Tenta de novo!')
       setStatus('error')
     } finally {
       stopMessageRotation()
     }
   }, [prompt, startMessageRotation, stopMessageRotation])
+
+  // ── Adaptação do guia existente ───────────────
+  // Manda o guia atual + instrução do usuário pro modelo
+  // e substitui o guia pelo resultado. Não vai pra loading
+  // screen — mostra um estado "adaptando" inline no GuideView.
+  const adapt = useCallback(async (instruction: string) => {
+    if (!guide || !instruction.trim()) return
+
+    setIsAdapting(true)
+    setError(null)
+    startMessageRotation(ADAPT_MESSAGES)
+
+    const adaptPrompt = `
+Aqui está o guia atual que foi gerado:
+${JSON.stringify(guide, null, 2)}
+
+O usuário quer adaptar o roteiro com a seguinte instrução:
+"${instruction}"
+
+Gere um novo guia completo aplicando essa adaptação, mantendo o destino e período,
+mas ajustando o que foi pedido. Retorne o JSON completo no mesmo formato.
+`
+
+    try {
+      const result = await generateGuideStream(adaptPrompt)
+      setGuide(result)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Não consegui adaptar. Tenta de novo!')
+    } finally {
+      setIsAdapting(false)
+      stopMessageRotation()
+    }
+  }, [guide, startMessageRotation, stopMessageRotation])
 
   const reset = useCallback(() => {
     stopMessageRotation()
@@ -96,6 +139,7 @@ export function useGuide(): UseGuideReturn {
     setGuide(null)
     setError(null)
     setPrompt('')
+    setIsAdapting(false)
     setLoadingMessage(LOADING_MESSAGES[0])
   }, [stopMessageRotation])
 
@@ -104,9 +148,11 @@ export function useGuide(): UseGuideReturn {
     guide,
     error,
     loadingMessage,
+    isAdapting,
     prompt,
     setPrompt,
     generate,
+    adapt,
     reset,
   }
 }

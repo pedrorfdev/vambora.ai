@@ -1,10 +1,7 @@
-// ─────────────────────────────────────────────
-// RestaurantCard.tsx
-// ─────────────────────────────────────────────
-
 import { motion } from 'motion/react'
-import { mapsLink } from '../../lib/deeplinks'
-import type { Restaurant } from '../../types/guide'
+import { mapsLink, symplaLink } from '../../lib/deeplinks'
+import type { Restaurant,GuideEvent, BudgetEstimate } from '../../types/guide'
+
 
 const PRECO_CONFIG = {
   economico:    { label: 'Econômico',   badge: 'badge-emerald', icon: '💚' },
@@ -28,7 +25,7 @@ export function RestaurantCard({ restaurant, index }: RestaurantCardProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, duration: 0.4 }}
-      className="card p-24 block group no-underline cursor-pointer"
+      className="card p-4 block group no-underline cursor-pointer"
     >
       <div className="flex items-start justify-between gap-3 mb-2">
         <div>
@@ -55,14 +52,6 @@ export function RestaurantCard({ restaurant, index }: RestaurantCardProps) {
     </motion.a>
   )
 }
-
-
-// ─────────────────────────────────────────────
-// EventCard.tsx
-// ─────────────────────────────────────────────
-
-import type { GuideEvent } from '../../types/guide'
-import { symplaLink } from '../../lib/deeplinks'
 
 interface EventCardProps {
   event: GuideEvent
@@ -108,22 +97,15 @@ export function EventCard({ event, index }: EventCardProps) {
   )
 }
 
-
-// ─────────────────────────────────────────────
-// BudgetCard.tsx
-// ─────────────────────────────────────────────
-
-import type { BudgetEstimate } from '../../types/guide'
-
 interface BudgetCardProps {
   budget: BudgetEstimate
 }
 
 const BUDGET_ROWS = [
-  { key: 'hospedagem_por_noite', label: 'Hospedagem / noite', icon: '🏠' },
-  { key: 'alimentacao_por_dia',  label: 'Alimentação / dia',  icon: '🍽' },
-  { key: 'transporte_local',     label: 'Transporte local',   icon: '🚌' },
-  { key: 'passeios',             label: 'Passeios',           icon: '🎒' },
+  { key: 'hospedagem_por_noite_por_pessoa', label: 'Hospedagem / noite', icon: '🏠' },
+  { key: 'alimentacao_por_dia_por_pessoa', label: 'Alimentação / dia', icon: '🍽' },
+  { key: 'transporte_local_por_pessoa',     label: 'Transporte local',   icon: '🚌' },
+  { key: 'passeios_por_pessoa',             label: 'Passeios',           icon: '🎒' },
 ] as const
 
 export function BudgetCard({ budget }: BudgetCardProps) {
@@ -132,7 +114,7 @@ export function BudgetCard({ budget }: BudgetCardProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="card p-5"
+      className="card p-5 bg-red-300"
     >
       <div className="flex flex-col gap-3 mb-5">
         {BUDGET_ROWS.map(row => (
@@ -159,7 +141,7 @@ export function BudgetCard({ budget }: BudgetCardProps) {
           Total estimado
         </span>
         <span className="text-base font-bold text-yellow">
-          {budget.total_estimado}
+          {budget.total_geral}
         </span>
       </div>
     </motion.div>

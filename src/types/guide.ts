@@ -1,91 +1,83 @@
 // ─────────────────────────────────────────────
 // guide.ts — Tipos do Vambora.ai
-// Esse arquivo é o contrato entre a AI e a UI.
-// Tudo que o Gemini retorna precisa bater com
-// essas interfaces. Se mudar aqui, muda em tudo.
 // ─────────────────────────────────────────────
 
-// ── Nível de preço ──────────────────────────
 export type PriceLevel = 'economico' | 'moderado' | 'sofisticado'
 
-// ── Clima ───────────────────────────────────
 export interface WeatherInfo {
-  temperatura_media: string   // ex: "22°C"
-  condicao: string            // ex: "Parcialmente nublado"
-  melhor_epoca: string        // ex: "Dezembro a Março"
-  dica: string                // ex: "Leve protetor solar"
+  temperatura_media: string
+  condicao: string
+  melhor_epoca: string
+  dica: string
 }
 
-// ── Parada do roteiro (dia a dia) ───────────
 export interface RouteStop {
   periodo: 'manhã' | 'tarde' | 'noite'
-  local: string               // ex: "Lagoa da Conceição"
+  local: string
   descricao: string
-  dica_local: string          // micro-dica de quem conhece
-  maps_query: string          // ex: "Lagoa da Conceição Florianópolis"
+  dica_local: string
+  maps_query: string
 }
 
-// ── Dia do roteiro ───────────────────────────
 export interface RouteDay {
   dia: number
-  titulo: string              // ex: "Centro histórico e Lagoa"
+  titulo: string
   paradas: RouteStop[]
 }
 
-// ── Restaurante ──────────────────────────────
 export interface Restaurant {
   nome: string
-  tipo: string                // ex: "Frutos do mar"
+  tipo: string
   preco: PriceLevel
   descricao: string
   dica: string
   maps_query: string
 }
 
-// ── Evento ───────────────────────────────────
 export interface GuideEvent {
   nome: string
-  data: string                // ex: "10 de maio"
+  data: string
   local: string
   descricao: string
-  link_busca: string          // ex: "Festival Gastronômico Florianópolis 2025"
+  link_busca: string
 }
 
-// ── Orçamento estimado ───────────────────────
+// Orçamento por pessoa + total do grupo
 export interface BudgetEstimate {
-  hospedagem_por_noite: string    // ex: "R$ 120 – R$ 350"
-  alimentacao_por_dia: string     // ex: "R$ 60 – R$ 180"
-  transporte_local: string        // ex: "R$ 30 – R$ 80"
-  passeios: string                // ex: "R$ 0 – R$ 150"
-  total_estimado: string          // ex: "R$ 800 – R$ 2.400"
+  hospedagem_por_noite_por_pessoa: string
+  alimentacao_por_dia_por_pessoa: string
+  transporte_local_por_pessoa: string
+  passeios_por_pessoa: string
+  total_por_pessoa: string
+  total_geral: string
 }
 
-// ── Links externos (deep links) ──────────────
+// Links estáveis — Booking substituído por Google Hotels
 export interface ExternalLinks {
-  booking: string
+  google_hotels: string
   airbnb: string
+  booking: string
   google_flights: string
   decolar: string
   google_maps: string
 }
 
-// ── Destino principal ────────────────────────
 export interface Destination {
-  nome: string                // ex: "Florianópolis"
-  estado: string              // ex: "SC"
-  pais: string                // ex: "Brasil"
-  descricao_curta: string     // tagline do destino
-  destaques: string[]         // ex: ["42 praias", "Lagoa da Conceição"]
-  unsplash_query: string      // query pra buscar foto no Unsplash
+  nome: string
+  estado: string
+  pais: string
+  descricao_curta: string
+  destaques: string[]
+  unsplash_query: string
 }
 
-// ── Guia completo — shape principal ─────────
 export interface Guide {
   destino: Destination
   periodo: {
-    data_inicio: string       // ex: "10/05/2025"
-    data_fim: string          // ex: "14/05/2025"
+    data_inicio: string
+    data_fim: string
     total_dias: number
+    total_pessoas: number
   }
   clima: WeatherInfo
   roteiro: RouteDay[]
@@ -93,15 +85,10 @@ export interface Guide {
   eventos: GuideEvent[]
   orcamento: BudgetEstimate
   links: ExternalLinks
-  dica_golden: string         // a dica de ouro que só local sabe
+  dica_golden: string
 }
 
-// ── Estado da geração do guia ────────────────
-export type GuideStatus =
-  | 'idle'        // ainda não pesquisou
-  | 'loading'     // AI processando
-  | 'success'     // guia pronto
-  | 'error'       // algo deu errado
+export type GuideStatus = 'idle' | 'loading' | 'success' | 'error'
 
 export interface GuideState {
   status: GuideStatus
