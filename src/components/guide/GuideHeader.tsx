@@ -1,10 +1,3 @@
-// ─────────────────────────────────────────────
-// GuideHeader.tsx — Cabeçalho do guia gerado
-//
-// Mostra destino, período, badges de destaques,
-// clima e a dica golden com destaque visual.
-// ─────────────────────────────────────────────
-
 import { motion } from 'motion/react'
 import type { Guide } from '../../types/guide'
 

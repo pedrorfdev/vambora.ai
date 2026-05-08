@@ -28,7 +28,7 @@ export function RestaurantCard({ restaurant, index }: RestaurantCardProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, duration: 0.4 }}
-      className="card p-4 block group no-underline cursor-pointer"
+      className="card p-24 block group no-underline cursor-pointer"
     >
       <div className="flex items-start justify-between gap-3 mb-2">
         <div>

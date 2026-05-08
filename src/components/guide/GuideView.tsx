@@ -1,12 +1,3 @@
-// ─────────────────────────────────────────────
-// GuideView.tsx — Tela principal do guia gerado
-//
-// Orquestra todos os componentes do guia.
-// Layout em duas colunas no desktop:
-//   esquerda → roteiro dia a dia
-//   direita  → restaurantes, eventos, orçamento, links
-// ─────────────────────────────────────────────
-
 import { motion } from 'motion/react'
 import type { Guide } from '../../types/guide'
 import { GuideHeader } from './GuideHeader'
@@ -23,7 +14,6 @@ interface GuideViewProps {
   onReset: () => void
 }
 
-// ── Componente de seção com título ────────────
 function Section({
   title,
   children,
@@ -41,7 +31,6 @@ function Section({
   )
 }
 
-// ── View principal ────────────────────────────
 export function GuideView({ guide, onReset }: GuideViewProps) {
   return (
     <motion.div

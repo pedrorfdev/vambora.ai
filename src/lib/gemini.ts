@@ -1,5 +1,17 @@
-import { GoogleGenAI } from '@google/genai';
-import type { Guide } from '../types/guide';
+// ─────────────────────────────────────────────
+// gemini.ts — Integração com @google/genai
+// Fallback automático entre modelos se um falhar
+// ─────────────────────────────────────────────
+
+import { GoogleGenAI } from '@google/genai'
+import type { Guide } from '../types/guide'
+
+// Ordem de preferência — tenta do primeiro ao último
+const MODELS = [
+  'gemini-2.5-flash-lite',
+  'gemini-2.5-flash',
+  'gemini-2.0-flash-lite',
+]
 
 const SYSTEM_PROMPT = `
 Você é o Vambora.ai, um guia de viagens brasileiro inteligente,
@@ -11,6 +23,7 @@ Apenas o JSON puro, seguindo exatamente o schema abaixo.
 
 REGRAS IMPORTANTES:
 - Todos os valores em português brasileiro
+- Todas as datas (período, eventos e festivais) devem ser posteriores à ${Date.now()} e coerentes entre si
 - Dicas devem ser práticas, não óbvias ("vá à praia" não é dica)
 - maps_query deve ter cidade e estado para evitar ambiguidade
 - unsplash_query em inglês para melhores resultados
@@ -94,49 +107,79 @@ SCHEMA OBRIGATÓRIO:
 `
 
 function parseGuideJSON(raw: string): Guide {
-  const cleaned = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
+  const cleaned = raw
+    .replace(/```json/gi, '')
+    .replace(/```/g, '')
+    .trim()
+
   try {
-    return JSON.parse(cleaned) as Guide;
+    return JSON.parse(cleaned) as Guide
   } catch {
-    throw new Error('O guia veio com formato inesperado. Tenta de novo!');
+    throw new Error('O guia veio com formato inesperado. Tenta de novo!')
   }
+}
+
+function isRetryableError(error: unknown): boolean {
+  const msg = error instanceof Error ? error.message : String(error)
+  // 429 = rate limit, 503 = unavailable — ambos valem tentar outro modelo
+  return msg.includes('429') || msg.includes('503') || msg.includes('unavailable') || msg.includes('quota')
 }
 
 export async function generateGuideStream(
   userPrompt: string,
   onChunk?: (chunk: string) => void,
 ): Promise<Guide> {
-  const key = import.meta.env.VITE_GEMINI_KEY;
+  const key = import.meta.env.VITE_GEMINI_KEY
 
-  if (!key) throw new Error('VITE_GEMINI_KEY não encontrada.');
-  const ai = new GoogleGenAI({ apiKey: key });
-
-  const result = await ai.models.generateContentStream({
-    model: 'gemini-2.0-flash',
-    contents: [
-      {
-        role: 'user',
-        parts: [{ text: userPrompt }] // <-- Aqui entra o que o Pedro digitou no input!
-      }
-    ],
-    config: {
-      systemInstruction: SYSTEM_PROMPT,
-      temperature: 0.7,
-      topP: 0.9,
-      responseMimeType: 'application/json',
-    }
-  });
-
-  let fullText = '';
-
-  // 3. Processa o stream para o seu loading ficar bonitão
-  for await (const chunk of result) {
-    // Na lib @google/genai, o acesso ao texto pode variar levemente, 
-    // mas geralmente é chunk.text() ou chunk.candidates[0].content.parts[0].text
-    const chunkText = chunk.text ?? ''; 
-    fullText += chunkText;
-    onChunk?.(chunkText);
+  if (!key) {
+    throw new Error('VITE_GEMINI_KEY não encontrada. Cria o .env na raiz com VITE_GEMINI_KEY=sua_chave')
   }
 
-  return parseGuideJSON(fullText);
+  const ai = new GoogleGenAI({ apiKey: key })
+
+  let lastError: unknown
+
+  for (const model of MODELS) {
+    try {
+      console.log(`[Vambora] Tentando modelo: ${model}`)
+
+      const stream = await ai.models.generateContentStream({
+        model,
+        contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+        config: {
+          systemInstruction: SYSTEM_PROMPT,
+          temperature: 0.7,
+          topP: 0.9,
+          responseMimeType: 'application/json',
+        },
+      })
+
+      let fullText = ''
+
+      for await (const chunk of stream) {
+        const chunkText = chunk.text ?? ''
+        if (chunkText) {
+          fullText += chunkText
+          onChunk?.(chunkText)
+        }
+      }
+
+      if (!fullText) {
+        throw new Error('Resposta vazia.')
+      }
+
+      return parseGuideJSON(fullText)
+
+    } catch (error) {
+      lastError = error
+      console.warn(`[Vambora] Modelo ${model} falhou:`, error)
+
+      // Só tenta o próximo se for erro de cota/disponibilidade
+      if (!isRetryableError(error)) break
+    }
+  }
+
+  // Todos os modelos falharam
+  const msg = lastError instanceof Error ? lastError.message : 'Erro desconhecido'
+  throw new Error(`Todos os modelos estão indisponíveis no momento. Tenta em alguns segundos! (${msg})`)
 }
