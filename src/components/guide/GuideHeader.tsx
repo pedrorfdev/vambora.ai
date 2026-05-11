@@ -6,11 +6,7 @@ interface GuideHeaderProps {
   onReset: () => void
 }
 
-const PERIODO_ICON: Record<string, string> = {
-  'manhã': '🌅',
-  'tarde': '☀️',
-  'noite': '🌙',
-}
+
 
 export function GuideHeader({ guide, onReset }: GuideHeaderProps) {
   const { destino, periodo, clima, dica_golden } = guide
