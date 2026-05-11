@@ -36,7 +36,7 @@ export function HighlightSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section className="py-28" style={{ background: '#080808' }}>
+    <section className="py-28" style={{ background: 'var(--color-bg-base)' }}>
       <div className="max-w-7xl mx-auto px-8">
         <div ref={ref} className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
@@ -86,10 +86,10 @@ export function HighlightSection() {
 
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <span className="badge-yellow text-xs mb-3 inline-block">✦ destino em destaque</span>
-                <h3 className="text-serif text-2xl font-normal" style={{ color: '#F0EDE6' }}>
+                <h3 className="text-serif text-2xl font-normal" style={{ color: 'var(--color-text-primary)' }}>
                   Florianópolis, SC
                 </h3>
-                <p className="text-sm mt-1" style={{ color: 'rgba(240,237,230,0.6)' }}>
+                <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>
                   42 praias · Lagoa da Conceição · gastronomia açoriana
                 </p>
               </div>
@@ -112,11 +112,11 @@ export function HighlightSection() {
               </span>
               <h2
                 className="text-serif font-normal"
-                style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#F0EDE6', lineHeight: 1.25 }}
+                style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: 'var(--color-fg-primary)', lineHeight: 1.25 }}
               >
                 Não é um gerador de texto. É um guia que pesquisa pra você.
               </h2>
-              <p className="mt-4 text-base leading-relaxed" style={{ color: 'rgba(240,237,230,0.5)' }}>
+              <p className="mt-4 text-base leading-relaxed" style={{ color: 'var(--color-fg-secondary)' }}>
                 Enquanto você toma aquele café, a IA tá consultando eventos reais,
                 verificando a época do ano e montando um roteiro que faz sentido.
               </p>
@@ -138,8 +138,8 @@ export function HighlightSection() {
                     {f.icon}
                   </div>
                   <div>
-                    <p className="text-sm font-medium" style={{ color: '#F0EDE6' }}>{f.title}</p>
-                    <p className="text-sm mt-0.5" style={{ color: 'rgba(240,237,230,0.5)' }}>{f.desc}</p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-fg-primary)' }}>{f.title}</p>
+                    <p className="text-sm mt-0.5" style={{ color: 'var(--color-fg-secondary)' }}>{f.desc}</p>
                   </div>
                 </motion.div>
               ))}

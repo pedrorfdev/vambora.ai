@@ -45,7 +45,7 @@ function DestCard({ card, index }: { card: typeof CARDS[0]; index: number }) {
       className="relative rounded-2xl overflow-hidden group cursor-pointer shrink-0"
       style={{
         width: 220, height: 290,
-        border: '1px solid rgba(255,255,255,0.06)',
+        border: '1px solid var(--color-bg-border)',
       }}
     >
       <img
@@ -59,8 +59,8 @@ function DestCard({ card, index }: { card: typeof CARDS[0]; index: number }) {
         style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%)' }}
       />
       <div className="absolute bottom-0 left-0 right-0 p-4">
-        <p className="text-sm font-medium" style={{ color: '#F0EDE6' }}>{card.label}</p>
-        <p className="text-xs mt-0.5" style={{ color: 'rgba(240,237,230,0.55)' }}>{card.sub}</p>
+        <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{card.label}</p>
+        <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>{card.sub}</p>
       </div>
     </motion.div>
   )
@@ -71,7 +71,7 @@ export function AboutSection() {
   const isTitleInView = useInView(titleRef, { once: true, margin: '-60px' })
 
   return (
-    <section className="py-28 overflow-hidden" style={{ background: '#0D0D0D' }}>
+    <section className="py-28 overflow-hidden" style={{ background: 'var(--color-bg-base)' }}>
       <div className="max-w-7xl mx-auto px-8">
         <motion.div
           ref={titleRef}
@@ -88,13 +88,13 @@ export function AboutSection() {
           </span>
           <h2
             className="text-serif font-normal max-w-lg"
-            style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#F0EDE6', lineHeight: 1.2 }}
+            style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--color-fg-primary)', lineHeight: 1.2 }}
           >
             Um guia que conhece o Brasil de verdade.
           </h2>
           <p
             className="mt-4 max-w-md text-base leading-relaxed"
-            style={{ color: 'rgba(240,237,230,0.5)' }}
+            style={{ color: 'var(--color-fg-secondary)' }}
           >
             Não é uma lista genérica. É um roteiro feito pra você — com eventos reais,
             preços honestos e dicas que só quem foi sabe.

@@ -81,7 +81,7 @@ function DestCard({
       className="relative rounded-2xl overflow-hidden cursor-pointer shrink-0"
       style={{
         width: 260, height: 340,
-        border: hovered ? '1px solid var(--color-yellow-border)' : '1px solid rgba(255,255,255,0.06)',
+        border: hovered ? '1px solid var(--color-yellow-border)' : '1px solid var(--color-bg-border)',
         boxShadow: hovered ? 'var(--shadow-yellow)' : undefined,
         transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
       }}
@@ -109,8 +109,8 @@ function DestCard({
         <span className="badge-yellow text-xs">{dest.estado}</span>
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-5">
-        <h3 className="text-base font-medium" style={{ color: '#F0EDE6' }}>{dest.nome}</h3>
-        <p className="text-xs mt-0.5" style={{ color: 'rgba(240,237,230,0.55)' }}>{dest.descricao}</p>
+        <h3 className="text-base font-medium" style={{ color: 'var(--color-text-primary)' }}>{dest.nome}</h3>
+        <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>{dest.descricao}</p>
         <motion.div
           animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 8 }}
           transition={{ duration: 0.2 }}
@@ -135,7 +135,7 @@ export function DestinationsSection({ onSelect }: DestinationsSectionProps) {
   }
 
   return (
-    <section className="py-28 overflow-hidden" style={{ background: '#0A0A0A' }}>
+    <section className="py-28 overflow-hidden" style={{ background: 'var(--color-bg-base)' }}>
       <div className="max-w-7xl mx-auto px-8">
         <motion.div
           ref={titleRef}
@@ -153,11 +153,11 @@ export function DestinationsSection({ onSelect }: DestinationsSectionProps) {
             </span>
             <h2
               className="text-serif font-normal"
-              style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#F0EDE6', lineHeight: 1.2 }}
+              style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: 'var(--color-fg-primary)', lineHeight: 1.2 }}
             >
               Explore sua próxima aventura.
             </h2>
-            <p className="mt-3 text-base" style={{ color: 'rgba(240,237,230,0.45)' }}>
+            <p className="mt-3 text-base" style={{ color: 'var(--color-fg-secondary)' }}>
               Clique em qualquer destino para gerar o guia completo.
             </p>
           </div>
@@ -167,7 +167,7 @@ export function DestinationsSection({ onSelect }: DestinationsSectionProps) {
                 key={dir}
                 onClick={() => scrollBy(dir)}
                 className="btn-ghost w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+                style={{ border: '1px solid var(--color-bg-border)' }}
               >
                 {dir === 'left' ? '←' : '→'}
               </button>

@@ -39,24 +39,6 @@ function getRandomMessage(list: string[], exclude?: string): string {
   return filtered[Math.floor(Math.random() * filtered.length)]
 }
 
-const STREAM_TIMEOUT_MS = 60000
-
-function withTimeout<T>(p: Promise<T>, ms = STREAM_TIMEOUT_MS): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(new Error('Tempo esgotado ao gerar a resposta da AI. Tenta novamente mais tarde.'))
-    }, ms)
-
-    p.then(res => {
-      clearTimeout(timer)
-      resolve(res)
-    }).catch(err => {
-      clearTimeout(timer)
-      reject(err)
-    })
-  })
-}
-
 interface UseGuideReturn {
   status: GuideStatus
   guide: Guide | null
@@ -107,7 +89,7 @@ export function useGuide(): UseGuideReturn {
     startMessageRotation(LOADING_MESSAGES)
 
     try {
-      const result = await withTimeout(generateGuideStream(text))
+      const result = await generateGuideStream(text)
       setGuide(result)
       setStatus('success')
     } catch (err) {
@@ -141,7 +123,7 @@ mas ajustando o que foi pedido. Retorne o JSON completo no mesmo formato.
 `
 
     try {
-      const result = await withTimeout(generateGuideStream(adaptPrompt))
+      const result = await generateGuideStream(adaptPrompt)
       setGuide(result)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Não consegui adaptar. Tenta de novo!')

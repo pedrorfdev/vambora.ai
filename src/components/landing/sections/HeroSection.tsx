@@ -7,48 +7,49 @@ import { motion, AnimatePresence } from 'motion/react'
 
 interface HeroSectionProps {
   onSubmit: (prompt: string) => void
+  error?: string | null
 }
 
 const FLOATING_IMAGES = [
   {
-    url: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=300&q=80',
+    url: 'https://images.unsplash.com/photo-1518639192441-8fce0a366e2e?auto=format&fit=crop&w=600&q=80',
     label: 'Rio de Janeiro',
-    initialX: -420, initialY: -180, initialRot: -15, w: 180,
+    initialX: -460, initialY: -180, initialRot: -15, w: 180,
   },
   {
-    url: 'https://images.unsplash.com/photo-1560449752-8b6ead57b89a?w=300&q=80',
+    url: 'https://images.unsplash.com/photo-1566996694954-90b052c413c4?auto=format&fit=crop&w=600&q=80',
     label: 'Salvador',
-    initialX: 380, initialY: -220, initialRot: 12, w: 200,
+    initialX: 420, initialY: -220, initialRot: 12, w: 200,
   },
   {
-    url: 'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?w=300&q=80',
+    url: 'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=600&q=80',
     label: 'Florianópolis',
-    initialX: -380, initialY: 200, initialRot: 8, w: 170,
+    initialX: -400, initialY: 200, initialRot: 8, w: 170,
   },
   {
-    url: 'https://images.unsplash.com/photo-1612294037637-ec328d0e075e?w=300&q=80',
+    url: 'https://images.unsplash.com/photo-1580977276076-ae4b8c219b8e?auto=format&fit=crop&w=600&q=80',
     label: 'Chapada Diamantina',
-    initialX: 400, initialY: 180, initialRot: -10, w: 190,
+    initialX: 440, initialY: 180, initialRot: -10, w: 190,
   },
   {
-    url: 'https://images.unsplash.com/photo-1619546952812-520e98064a52?w=300&q=80',
+    url: 'https://images.unsplash.com/photo-1619546952812-520e98064a52?auto=format&fit=crop&w=600&q=80',
     label: 'Gramado',
-    initialX: -200, initialY: -320, initialRot: 6, w: 155,
+    initialX: -220, initialY: -360, initialRot: 6, w: 155,
   },
   {
-    url: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=300&q=80',
+    url: 'https://images.unsplash.com/photo-1581460583920-7c050aa82903?auto=format&fit=crop&w=600&q=80',
     label: 'Amazônia',
-    initialX: 220, initialY: -300, initialRot: -7, w: 165,
+    initialX: 350, initialY: -380, initialRot: -7, w: 165,
   },
   {
-    url: 'https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?w=300&q=80',
+    url: 'https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?auto=format&fit=crop&w=600&q=80',
     label: 'Lençóis Maranhenses',
-    initialX: -260, initialY: 300, initialRot: -12, w: 175,
+    initialX: -280, initialY: 340, initialRot: -12, w: 175,
   },
   {
-    url: 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=300&q=80',
+    url: 'https://images.unsplash.com/photo-1549247796-56a2992567d8?auto=format&fit=crop&w=600&q=80',
     label: 'Pantanal',
-    initialX: 260, initialY: 290, initialRot: 9, w: 160,
+    initialX: 280, initialY: 320, initialRot: 9, w: 160,
   },
 ]
 
@@ -79,24 +80,28 @@ function FloatingCard({
         left: '50%', top: '50%',
         marginLeft: -image.w / 2,
         marginTop: -h / 2,
-        border: '1px solid rgba(255,255,255,0.1)',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.6)',
+        border: '1px solid var(--color-bg-border)',
+        boxShadow: 'var(--shadow-card)',
       }}
       initial={{ x: 0, y: 0, rotate: 0, opacity: 0, scale: 0.3 }}
       animate={
         isCollapsing
-          ? { x: 0, y: 0, rotate: 0, scale: 0, opacity: 0,
-              transition: { duration: 0.5, ease: [0.4, 0, 1, 1], delay: index * 0.03 } }
+          ? {
+            x: 0, y: 0, rotate: 0, scale: 0, opacity: 0,
+            transition: { duration: 0.5, ease: [0.4, 0, 1, 1], delay: index * 0.03 }
+          }
           : isVisible
-          ? { x: image.initialX, y: image.initialY, rotate: image.initialRot, opacity: 1, scale: 1,
+            ? {
+              x: image.initialX, y: image.initialY, rotate: image.initialRot, opacity: 1, scale: 1,
               transition: {
                 x: { duration: 0.9, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] },
                 y: { duration: 0.9, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] },
                 rotate: { duration: 0.9, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] },
                 opacity: { duration: 0.5, delay: index * 0.08 },
                 scale: { duration: 0.9, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] },
-              } }
-          : {}
+              }
+            }
+            : {}
       }
     >
       <motion.div
@@ -117,7 +122,7 @@ function FloatingCard({
   )
 }
 
-export function HeroSection({ onSubmit }: HeroSectionProps) {
+export function HeroSection({ onSubmit, error }: HeroSectionProps) {
   const [prompt, setPrompt] = useState('')
   const [isCollapsing, setIsCollapsing] = useState(false)
   const [cardsVisible, setCardsVisible] = useState(false)
@@ -150,13 +155,13 @@ export function HeroSection({ onSubmit }: HeroSectionProps) {
   return (
     <section
       className="relative min-h-dvh flex items-center justify-center overflow-hidden"
-      style={{ background: '#080808' }}
+      style={{ background: 'var(--color-bg-base)' }}
     >
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none opacity-50 dark:opacity-100"
         style={{
-          background: 'radial-gradient(ellipse 55% 65% at 50% 50%, transparent 0%, rgba(8,8,8,0.75) 60%, rgba(8,8,8,0.97) 100%)',
-          zIndex: 2,
+          background: 'radial-gradient(ellipse 70% 70% at 50% 50%, transparent 40%, var(--color-bg-base) 90%, var(--color-bg-base) 100%)',
+          zIndex: 0,
         }}
       />
 
@@ -184,20 +189,20 @@ export function HeroSection({ onSubmit }: HeroSectionProps) {
           <div
             className="w-14 h-14 rounded-2xl flex items-center justify-center mb-1"
             style={{
-              background: 'rgba(201,168,76,0.1)',
-              border: '1px solid rgba(201,168,76,0.25)',
-              boxShadow: '0 0 60px rgba(201,168,76,0.1)',
+              background: 'var(--color-yellow-glow)',
+              border: '1px solid var(--color-yellow-border)',
+              boxShadow: 'var(--shadow-yellow)',
             }}
           >
             <span className="text-2xl">✈</span>
           </div>
           <h1
             className="text-serif font-normal tracking-tight"
-            style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', color: '#F0EDE6', lineHeight: 1 }}
+            style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', color: 'var(--color-fg-primary)', lineHeight: 1 }}
           >
-            vambora<span style={{ color: '#C9A84C' }}>.ai</span>
+            vambora<span style={{ color: 'var(--color-yellow)' }}>.ai</span>
           </h1>
-          <div className="flex items-center gap-2 text-base" style={{ color: 'rgba(240,237,230,0.45)' }}>
+          <div className="flex items-center gap-2 text-base" style={{ color: 'var(--color-fg-secondary)' }}>
             <span>Guia inteligente para suas</span>
             <AnimatePresence mode="wait">
               <motion.span
@@ -206,7 +211,7 @@ export function HeroSection({ onSubmit }: HeroSectionProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.25 }}
-                style={{ color: '#C9A84C', display: 'inline-block' }}
+                style={{ color: 'var(--color-yellow)', display: 'inline-block' }}
               >
                 {ROTATING_WORDS[wordIndex]}
               </motion.span>
@@ -224,10 +229,11 @@ export function HeroSection({ onSubmit }: HeroSectionProps) {
           <div
             className="rounded-2xl transition-all duration-200"
             style={{
-              background: 'rgba(18,18,18,0.92)',
-              border: '1px solid rgba(255,255,255,0.07)',
+              background: 'var(--color-bg-card)',
+              border: '1px solid var(--color-bg-border)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
+              boxShadow: 'var(--shadow-card)',
             }}
           >
             <textarea
@@ -239,9 +245,9 @@ export function HeroSection({ onSubmit }: HeroSectionProps) {
               rows={4}
               className="w-full bg-transparent resize-none outline-none leading-relaxed px-7 pt-6 pb-4"
               style={{
-                color: '#F0EDE6',
+                color: 'var(--color-fg-primary)',
                 fontSize: '1rem',
-                caretColor: '#C9A84C',
+                caretColor: 'var(--color-yellow)',
               }}
             />
 
@@ -253,17 +259,17 @@ export function HeroSection({ onSubmit }: HeroSectionProps) {
                   onClick={() => { setPrompt(ex); textareaRef.current?.focus() }}
                   className="text-xs px-3 py-1.5 rounded-full cursor-pointer transition-all duration-200"
                   style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    color: 'rgba(240,237,230,0.45)',
+                    background: 'var(--color-bg-soft)',
+                    border: '1px solid var(--color-bg-border)',
+                    color: 'var(--color-fg-secondary)',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = 'rgba(201,168,76,0.35)'
-                    e.currentTarget.style.color = '#C9A84C'
+                    e.currentTarget.style.borderColor = 'var(--color-yellow-border)'
+                    e.currentTarget.style.color = 'var(--color-yellow)'
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
-                    e.currentTarget.style.color = 'rgba(240,237,230,0.45)'
+                    e.currentTarget.style.borderColor = 'var(--color-bg-border)'
+                    e.currentTarget.style.color = 'var(--color-fg-secondary)'
                   }}
                 >
                   {ex}
@@ -272,9 +278,20 @@ export function HeroSection({ onSubmit }: HeroSectionProps) {
             </div>
 
             <div className="flex items-center justify-between px-6 pb-5 pt-2">
-              <span style={{ fontSize: '0.72rem', color: 'rgba(240,237,230,0.2)' }}>
-                Enter para gerar · Shift+Enter nova linha
-              </span>
+              <div className="flex flex-col gap-1">
+                {error && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="text-xs font-medium text-red-400"
+                  >
+                    {error}
+                  </motion.span>
+                )}
+                <span style={{ fontSize: '0.72rem', color: 'var(--color-fg-muted)' }}>
+                  Enter para gerar · Shift+Enter nova linha
+                </span>
+              </div>
               <button
                 onClick={handleSubmit}
                 disabled={!prompt.trim()}
@@ -293,13 +310,13 @@ export function HeroSection({ onSubmit }: HeroSectionProps) {
           transition={{ delay: 1.4 }}
           className="flex flex-col items-center gap-2 mt-2"
         >
-          <span style={{ fontSize: '0.65rem', color: 'rgba(240,237,230,0.2)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+          <span style={{ fontSize: '0.65rem', color: 'var(--color-fg-muted)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
             role para explorar
           </span>
           <motion.span
             animate={{ y: [0, 5, 0] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ color: 'rgba(240,237,230,0.2)', fontSize: '0.75rem' }}
+            style={{ color: 'var(--color-fg-muted)', fontSize: '0.75rem' }}
           >
             ↓
           </motion.span>

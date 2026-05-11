@@ -14,8 +14,8 @@ export function LandingFooter() {
       ref={ref}
       className="py-16 px-8"
       style={{
-        background: '#060606',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+        background: 'var(--color-bg-base)',
+        borderTop: '1px solid var(--color-bg-border)',
       }}
     >
       <div className="max-w-7xl mx-auto">
@@ -29,13 +29,13 @@ export function LandingFooter() {
           <div>
             <h3
               className="text-serif text-2xl font-normal"
-              style={{ color: '#F0EDE6' }}
+              style={{ color: 'var(--color-fg-primary)' }}
             >
               vambora<span style={{ color: 'var(--color-yellow)' }}>.ai</span>
             </h3>
             <p
               className="text-sm mt-2"
-              style={{ color: 'rgba(240,237,230,0.35)' }}
+              style={{ color: 'var(--color-fg-muted)' }}
             >
               O guia inteligente para viajar pelo Brasil.
             </p>
@@ -46,20 +46,20 @@ export function LandingFooter() {
             <div className="flex flex-col gap-3">
               <p
                 className="text-xs font-semibold uppercase tracking-widest"
-                style={{ color: 'rgba(240,237,230,0.3)' }}
+                style={{ color: 'var(--color-fg-muted)' }}
               >
                 Produto
               </p>
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="text-sm text-left"
-                style={{ color: 'rgba(240,237,230,0.5)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                className="text-sm text-left hover:text-yellow transition-colors"
+                style={{ color: 'var(--color-fg-secondary)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
                 Gerar guia
               </button>
               <span
                 className="text-sm"
-                style={{ color: 'rgba(240,237,230,0.5)' }}
+                style={{ color: 'var(--color-fg-secondary)' }}
               >
                 Destinos
               </span>
@@ -67,7 +67,7 @@ export function LandingFooter() {
             <div className="flex flex-col gap-3">
               <p
                 className="text-xs font-semibold uppercase tracking-widest"
-                style={{ color: 'rgba(240,237,230,0.3)' }}
+                style={{ color: 'var(--color-fg-muted)' }}
               >
                 Tecnologia
               </p>
@@ -75,8 +75,8 @@ export function LandingFooter() {
                 href="https://ai.google.dev"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm"
-                style={{ color: 'rgba(240,237,230,0.5)', textDecoration: 'none' }}
+                className="text-sm hover:text-yellow transition-colors"
+                style={{ color: 'var(--color-fg-secondary)', textDecoration: 'none' }}
               >
                 Gemini AI
               </a>
@@ -84,8 +84,8 @@ export function LandingFooter() {
                 href="https://unsplash.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm"
-                style={{ color: 'rgba(240,237,230,0.5)', textDecoration: 'none' }}
+                className="text-sm hover:text-yellow transition-colors"
+                style={{ color: 'var(--color-fg-secondary)', textDecoration: 'none' }}
               >
                 Unsplash
               </a>
@@ -99,17 +99,17 @@ export function LandingFooter() {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-3"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
+          style={{ borderTop: '1px solid var(--color-bg-border)' }}
         >
           <p
             className="text-xs"
-            style={{ color: 'rgba(240,237,230,0.25)' }}
+            style={{ color: 'var(--color-fg-muted)' }}
           >
             © 2025 vambora.ai · Feito com ☕ e 🇧🇷
           </p>
           <p
             className="text-xs"
-            style={{ color: 'rgba(240,237,230,0.25)' }}
+            style={{ color: 'var(--color-fg-muted)' }}
           >
             powered by Gemini · imagens via Unsplash
           </p>

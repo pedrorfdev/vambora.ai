@@ -45,7 +45,7 @@ export function ManifestoSection() {
   return (
     <section
       className="relative min-h-dvh flex items-center justify-center overflow-hidden py-32"
-      style={{ background: '#060606' }}
+      style={{ background: 'var(--color-bg-base)' }}
     >
       {/* Orbs decorativos */}
       <BackgroundOrb x="10%" y="20%" size={300} delay={0} />
@@ -78,7 +78,7 @@ export function ManifestoSection() {
               className={line.serif ? 'text-serif' : ''}
               style={{
                 fontSize: line.size,
-                color: line.serif ? '#F0EDE6' : 'rgba(240,237,230,0.5)',
+                color: line.serif ? 'var(--color-fg-primary)' : 'var(--color-fg-secondary)',
                 lineHeight: 1.3,
                 fontWeight: line.serif ? 400 : 300,
               }}

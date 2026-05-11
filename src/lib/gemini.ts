@@ -7,9 +7,9 @@ import { GoogleGenAI } from '@google/genai'
 import type { Guide } from '../types/guide'
 
 const MODELS = [
-  'gemini-2.5-flash-lite',
-  'gemini-2.5-flash',
-  'gemini-2.0-flash-lite',
+  'gemini-2.0-flash',
+  'gemini-1.5-flash',
+  'gemini-1.5-pro',
 ]
 
 function buildSystemPrompt(): string {
@@ -155,7 +155,10 @@ function parseGuideJSON(raw: string): Guide {
 
 function isRetryableError(error: unknown): boolean {
   const msg = error instanceof Error ? error.message : String(error)
-  return msg.includes('429') || msg.includes('503') || msg.includes('unavailable') || msg.includes('quota')
+  const retryableMessages = [
+    '429', '503', 'unavailable', 'quota', 'vazia', 'empty', 'timeout', 'deadlines'
+  ]
+  return retryableMessages.some(m => msg.toLowerCase().includes(m))
 }
 
 export async function generateGuideStream(
@@ -181,7 +184,7 @@ export async function generateGuideStream(
         model,
         contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
         config: {
-          systemInstruction: systemPrompt,
+          systemInstruction: { parts: [{ text: systemPrompt }] },
           temperature: 0.7,
           topP: 0.9,
           tools: [{ googleSearch: {} }],
@@ -191,7 +194,9 @@ export async function generateGuideStream(
       let fullText = ''
 
       for await (const chunk of stream) {
-        const chunkText = chunk.text ?? ''
+        // No SDK @google/genai, o texto costuma estar em chunk.text
+        // Mas garantimos com uma verificação segura
+        const chunkText = chunk.text || ''
         if (chunkText) {
           fullText += chunkText
           onChunk?.(chunkText)
@@ -205,6 +210,10 @@ export async function generateGuideStream(
     } catch (error) {
       lastError = error
       console.warn(`[Vambora] Modelo ${model} falhou:`, error)
+      // Se for o último modelo, não precisa verificar se é retryable, vai sair do loop de qualquer jeito
+      if (model === MODELS[MODELS.length - 1]) break
+      // Se não for retryable (ex: erro de prompt ou config), para por aqui. 
+      // Mas se o erro for no modelo em si, tentamos o próximo.
       if (!isRetryableError(error)) break
     }
   }

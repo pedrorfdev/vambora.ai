@@ -10,32 +10,31 @@ interface ThemeToggleProps {
 }
 
 export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
+  const isDark = theme === 'dark'
+
   return (
-    <motion.button
+    <button
       onClick={onToggle}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="
-        w-10 h-10 rounded-xl flex items-center justify-center
-        border transition-all duration-200 cursor-pointer
-      "
-      style={{
-        background: 'var(--color-bg-card)',
-        borderColor: 'var(--color-bg-border)',
-        color: 'var(--color-fg-secondary)',
+      className="relative w-14 h-8 rounded-full p-1 cursor-pointer transition-colors duration-300 flex items-center"
+      style={{ 
+        background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
+        border: '1px solid var(--color-bg-border)'
       }}
-      title={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
     >
-      <motion.span
-        key={theme}
-        initial={{ opacity: 0, rotate: -30, scale: 0.6 }}
-        animate={{ opacity: 1, rotate: 0, scale: 1 }}
-        exit={{ opacity: 0, rotate: 30, scale: 0.6 }}
-        transition={{ duration: 0.2 }}
-        className="text-base leading-none"
+      <motion.div
+        className="absolute w-6 h-6 rounded-full flex items-center justify-center"
+        animate={{ x: isDark ? 24 : 0 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+        style={{ background: 'var(--color-yellow)' }}
       >
-        {theme === 'dark' ? '☀️' : '🌙'}
-      </motion.span>
-    </motion.button>
+        <span className="text-[10px] leading-none select-none">
+          {isDark ? '🌙' : '☀️'}
+        </span>
+      </motion.div>
+      <div className="flex justify-between w-full px-1.5 opacity-30">
+        <span className="text-[10px]">☀️</span>
+        <span className="text-[10px]">🌙</span>
+      </div>
+    </button>
   )
 }

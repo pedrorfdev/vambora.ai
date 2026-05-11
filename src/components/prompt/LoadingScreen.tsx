@@ -62,7 +62,7 @@ export function LoadingScreen({ message }: LoadingScreenProps) {
       </div>
 
       {/* Barra de progresso indeterminada */}
-      <div className="w-48 h-0.5 bg-black-border rounded-full overflow-hidden">
+      <div className="w-48 h-0.5 bg-bg-border rounded-full overflow-hidden">
         <motion.div
           animate={{ x: ['-100%', '200%'] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}

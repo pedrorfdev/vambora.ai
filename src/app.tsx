@@ -30,12 +30,10 @@ export function App() {
       className="min-h-dvh transition-colors duration-300"
       style={{ backgroundColor: 'var(--color-bg-base)', color: 'var(--color-fg-primary)' }}
     >
-      {/* Toggle de tema — fixo no canto, só no guia e loading */}
-      {guide.status !== 'idle' && (
-        <div className="fixed top-4 right-4 z-50">
-          <ThemeToggle theme={theme} onToggle={toggle} />
-        </div>
-      )}
+      {/* Toggle de tema — fixo no canto */}
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle theme={theme} onToggle={toggle} />
+      </div>
 
       <AnimatePresence mode="wait">
 
@@ -47,7 +45,10 @@ export function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <LandingPage onPromptSubmit={handlePromptSubmit} />
+            <LandingPage 
+              onPromptSubmit={handlePromptSubmit} 
+              error={guide.error}
+            />
           </motion.div>
         )}
 
