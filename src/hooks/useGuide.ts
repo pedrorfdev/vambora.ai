@@ -47,7 +47,7 @@ interface UseGuideReturn {
   isAdapting: boolean
   prompt: string
   setPrompt: (p: string) => void
-  generate: () => Promise<void>
+  generate: (p?: string) => Promise<void>
   adapt: (instruction: string) => Promise<void>
   reset: () => void
 }
@@ -79,8 +79,8 @@ export function useGuide(): UseGuideReturn {
   }, [])
 
   // ── Geração inicial ───────────────────────────
-  const generate = useCallback(async () => {
-    const text = prompt.trim()
+  const generate = useCallback(async (overridePrompt?: string) => {
+    const text = (overridePrompt ?? prompt).trim()
     if (!text) return
 
     setStatus('loading')

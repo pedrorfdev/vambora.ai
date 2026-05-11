@@ -1,5 +1,6 @@
 // ─────────────────────────────────────────────
 // gemini.ts — Integração com @google/genai
+// Google Search + JSON via prompt (sem responseMimeType)
 // ─────────────────────────────────────────────
 
 import { GoogleGenAI } from '@google/genai'
@@ -11,7 +12,6 @@ const MODELS = [
   'gemini-2.0-flash-lite',
 ]
 
-// Data atual injetada dinamicamente — resolve datas de 2024
 function buildSystemPrompt(): string {
   const hoje = new Date()
   const dataAtual = hoje.toLocaleDateString('pt-BR', {
@@ -30,8 +30,12 @@ HOJE É: ${dataAtual}
 Use essa data como referência para calcular todas as datas do roteiro.
 Nunca use datas de anos anteriores. Se o usuário disser "semana que vem", calcule a partir de hoje.
 
-Você SEMPRE retorna um JSON válido, sem texto antes ou depois, sem blocos de código.
-Apenas o JSON puro, seguindo exatamente o schema abaixo.
+Use o Google Search para buscar eventos reais, preços atualizados e informações recentes do destino.
+Se o usuário mencionar um evento específico (ex: "Codecon", "Rock in Rio", "festival"), 
+busque as datas e local reais e monte o roteiro em torno do evento.
+
+RETORNE APENAS O JSON PURO — sem texto antes, sem texto depois, sem blocos de código, sem markdown.
+Apenas o objeto JSON válido, começando com { e terminando com }.
 
 REGRAS IMPORTANTES:
 - Todos os valores em português brasileiro
@@ -39,32 +43,31 @@ REGRAS IMPORTANTES:
 - maps_query deve ter cidade e estado para evitar ambiguidade
 - unsplash_query em inglês para melhores resultados
 - orcamento baseado em valores reais e atualizados do Brasil
-- orcamento.por_pessoa é o custo por pessoa por dia
-- orcamento.total_estimado é a soma de todos os dias para o grupo
+- Se o usuário não informar orçamento, deduza baseado no destino:
+  * Capitais e destinos premium (Floripa, Búzios, Trancoso, Gramado): R$ 350–500/pessoa/dia
+  * Cidades médias (Paraty, Tiradentes, Bonito, Chapada): R$ 200–350/pessoa/dia
+  * Destinos econômicos e interior: R$ 100–200/pessoa/dia
+  * Indique no total_estimado qual perfil foi assumido
+- orcamento.total_por_pessoa é o custo total por pessoa para todos os dias
+- orcamento.total_geral é total_por_pessoa × total_pessoas
 - dica_golden deve ser algo que só quem já foi sabe — aquela dica de ouro
 - Se o usuário não informar datas, assuma a próxima semana
 - Se não informar duração, assuma 4 dias
 - Se não informar número de pessoas, assuma 1 pessoa
-- Se o usuário não informar orçamento, deduza baseado no destino:
-  - Capitais e destinos premium (Floripa, Búzios, Trancoso): R$ 350-500/pessoa/dia
-  - Cidades médias (Paraty, Tiradentes, Bonito): R$ 200-350/pessoa/dia  
-  - Destinos econômicos e interior: R$ 100-200/pessoa/dia
-  - Sempre explique no total_estimado qual perfil foi assumido
-- eventos: busque eventos reais se souber, ou indique o tipo de evento típico da época
 
-SCHEMA OBRIGATÓRIO:
+SCHEMA OBRIGATÓRIO — retorne exatamente nesse formato:
 {
   "destino": {
     "nome": string,
-    "estado": string (sigla, ex: "SC"),
+    "estado": string,
     "pais": string,
-    "descricao_curta": string (max 80 chars, tagline do destino),
-    "destaques": string[] (3 a 5 itens),
-    "unsplash_query": string (em inglês, ex: "Florianopolis Brazil beach")
+    "descricao_curta": string,
+    "destaques": string[],
+    "unsplash_query": string
   },
   "periodo": {
-    "data_inicio": string (dd/mm/aaaa — use o ano correto: ${hoje.getFullYear()} ou ${hoje.getFullYear() + 1}),
-    "data_fim": string (dd/mm/aaaa),
+    "data_inicio": string,
+    "data_fim": string,
     "total_dias": number,
     "total_pessoas": number
   },
@@ -114,7 +117,7 @@ SCHEMA OBRIGATÓRIO:
     "transporte_local_por_pessoa": string,
     "passeios_por_pessoa": string,
     "total_por_pessoa": string,
-    "total_geral": string (total_por_pessoa × total_pessoas × total_dias)
+    "total_geral": string
   },
   "links": {
     "google_hotels": string,
@@ -123,19 +126,28 @@ SCHEMA OBRIGATÓRIO:
     "decolar": string,
     "google_maps": string
   },
-  "dica_golden": string (max 120 chars)
+  "dica_golden": string
 }
 `
 }
 
 function parseGuideJSON(raw: string): Guide {
+  // Remove qualquer markdown que o modelo insista em colocar
   const cleaned = raw
     .replace(/```json/gi, '')
     .replace(/```/g, '')
     .trim()
 
+  // Extrai o primeiro objeto JSON válido da resposta
+  const start = cleaned.indexOf('{')
+  const end = cleaned.lastIndexOf('}')
+
+  if (start === -1 || end === -1) {
+    throw new Error('Nenhum JSON encontrado na resposta.')
+  }
+
   try {
-    return JSON.parse(cleaned) as Guide
+    return JSON.parse(cleaned.slice(start, end + 1)) as Guide
   } catch {
     throw new Error('O guia veio com formato inesperado. Tenta de novo!')
   }
@@ -157,7 +169,7 @@ export async function generateGuideStream(
   }
 
   const ai = new GoogleGenAI({ apiKey: key })
-  const systemPrompt = buildSystemPrompt() // data injetada aqui
+  const systemPrompt = buildSystemPrompt()
 
   let lastError: unknown
 
@@ -172,7 +184,6 @@ export async function generateGuideStream(
           systemInstruction: systemPrompt,
           temperature: 0.7,
           topP: 0.9,
-          responseMimeType: 'application/json',
           tools: [{ googleSearch: {} }],
         },
       })
