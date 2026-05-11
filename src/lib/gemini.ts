@@ -7,9 +7,9 @@ import { GoogleGenAI } from '@google/genai'
 import type { Guide } from '../types/guide'
 
 const MODELS = [
-  'gemini-2.0-flash',
-  'gemini-1.5-flash',
-  'gemini-1.5-pro',
+  'gemini-2.5-flash-lite',
+  'gemini-2.5-flash',
+  'gemini-2.0-flash-lite',
 ]
 
 function buildSystemPrompt(): string {
@@ -194,9 +194,7 @@ export async function generateGuideStream(
       let fullText = ''
 
       for await (const chunk of stream) {
-        // No SDK @google/genai, o texto costuma estar em chunk.text
-        // Mas garantimos com uma verificação segura
-        const chunkText = chunk.text || ''
+        const chunkText = chunk.text ?? ''
         if (chunkText) {
           fullText += chunkText
           onChunk?.(chunkText)

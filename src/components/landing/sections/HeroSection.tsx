@@ -12,12 +12,12 @@ interface HeroSectionProps {
 
 const FLOATING_IMAGES = [
   {
-    url: 'https://images.unsplash.com/photo-1518639192441-8fce0a366e2e?auto=format&fit=crop&w=600&q=80',
+    url: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=600&q=80',
     label: 'Rio de Janeiro',
     initialX: -460, initialY: -180, initialRot: -15, w: 180,
   },
   {
-    url: 'https://images.unsplash.com/photo-1566996694954-90b052c413c4?auto=format&fit=crop&w=600&q=80',
+    url: 'https://images.unsplash.com/photo-1548963670-c94ea3d0e9ea?auto=format&fit=crop&w=600&q=80',
     label: 'Salvador',
     initialX: 420, initialY: -220, initialRot: 12, w: 200,
   },
@@ -27,7 +27,7 @@ const FLOATING_IMAGES = [
     initialX: -400, initialY: 200, initialRot: 8, w: 170,
   },
   {
-    url: 'https://images.unsplash.com/photo-1580977276076-ae4b8c219b8e?auto=format&fit=crop&w=600&q=80',
+    url: 'https://images.unsplash.com/photo-1612294037637-ec328d0e075e?auto=format&fit=crop&w=600&q=80',
     label: 'Chapada Diamantina',
     initialX: 440, initialY: 180, initialRot: -10, w: 190,
   },
@@ -37,7 +37,7 @@ const FLOATING_IMAGES = [
     initialX: -220, initialY: -360, initialRot: 6, w: 155,
   },
   {
-    url: 'https://images.unsplash.com/photo-1581460583920-7c050aa82903?auto=format&fit=crop&w=600&q=80',
+    url: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?auto=format&fit=crop&w=600&q=80',
     label: 'Amazônia',
     initialX: 350, initialY: -380, initialRot: -7, w: 165,
   },
@@ -47,7 +47,7 @@ const FLOATING_IMAGES = [
     initialX: -280, initialY: 340, initialRot: -12, w: 175,
   },
   {
-    url: 'https://images.unsplash.com/photo-1549247796-56a2992567d8?auto=format&fit=crop&w=600&q=80',
+    url: 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=600&q=80',
     label: 'Pantanal',
     initialX: 280, initialY: 320, initialRot: 9, w: 160,
   },
