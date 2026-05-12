@@ -14,23 +14,18 @@ export function App() {
   const guide = useGuide()
   const { theme, toggle } = useTheme()
 
-  // Seta o prompt no estado e dispara — generate() lê do estado
   async function handlePromptSubmit(prompt: string) {
     guide.setPrompt(prompt)
-    // setTimeout garante que o setState do setPrompt foi processado
-    setTimeout(() => guide.generate(), 0)
+    guide.generate(prompt)
   }
 
   return (
     <main className="min-h-dvh transition-colors duration-300"
       style={{ backgroundColor: 'var(--color-bg-base)', color: 'var(--color-fg-primary)' }}
     >
-      {/* Toggle de tema — só aparece fora da landing (hero já é sempre dark) */}
-      {guide.status !== 'idle' && guide.status !== 'error' && (
-        <div className="fixed top-4 right-4 z-50">
-          <ThemeToggle theme={theme} onToggle={toggle} />
-        </div>
-      )}
+      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[100]">
+        <ThemeToggle theme={theme} onToggle={toggle} />
+      </div>
 
       <AnimatePresence mode="wait">
 

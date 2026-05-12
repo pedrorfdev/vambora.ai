@@ -7,12 +7,12 @@
   --color-black-card: #1C1A18;
   --color-black-border: #2A2825;
 
-  /* ── Dourado vibrante — mais saturado, mais vivo ── */
-  --color-yellow: #E8B84B;
-  --color-yellow-soft: #F0C865;
-  --color-yellow-dim: #C49A32;
-  --color-yellow-glow: rgba(232, 184, 75, 0.14);
-  --color-yellow-border: rgba(232, 184, 75, 0.32);
+  /* ── Dourado vibrante — mais saturado, mais vivo (Âmbar) ── */
+  --color-yellow: #FF9F0A;
+  --color-yellow-soft: #FFB84D;
+  --color-yellow-dim: #D98308;
+  --color-yellow-glow: rgba(255, 159, 10, 0.14);
+  --color-yellow-border: rgba(255, 159, 10, 0.32);
 
   /* ── Emerald ── */
   --color-emerald: #10B981;
@@ -34,10 +34,9 @@
 
   /* ── Tipografia ── */
   --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-serif: 'Fraunces', Georgia, serif;
 
   /* ── Sombras com mais brilho ── */
-  --shadow-yellow: 0 0 40px rgba(232, 184, 75, 0.25), 0 0 80px rgba(232, 184, 75, 0.1);
+  --shadow-yellow: 0 0 40px rgba(255, 159, 10, 0.25), 0 0 80px rgba(255, 159, 10, 0.1);
   --shadow-card: 0 4px 40px rgba(0, 0, 0, 0.6);
   --shadow-card-hover: 0 8px 60px rgba(0, 0, 0, 0.7);
 
@@ -63,18 +62,18 @@
   --color-fg-secondary: #6B6860;
   --color-fg-muted: #A8A59D;
 
-  --color-yellow: #C49A32;
-  --color-yellow-soft: #D4AC45;
-  --color-yellow-dim: #A8832A;
-  --color-yellow-glow: rgba(196, 154, 50, 0.1);
-  --color-yellow-border: rgba(196, 154, 50, 0.3);
+  --color-yellow: #D98308;
+  --color-yellow-soft: #FF9F0A;
+  --color-yellow-dim: #B46A00;
+  --color-yellow-glow: rgba(217, 131, 8, 0.1);
+  --color-yellow-border: rgba(217, 131, 8, 0.3);
 
   --color-text-primary: #1A1815;
   --color-text-secondary: #6B6860;
   --color-text-muted: #A8A59D;
   --color-text-inverted: #FAFAF7;
 
-  --shadow-yellow: 0 0 32px rgba(196, 154, 50, 0.18);
+  --shadow-yellow: 0 0 32px rgba(217, 131, 8, 0.18);
   --shadow-card: 0 4px 32px rgba(0, 0, 0, 0.08);
 }
 
@@ -127,10 +126,7 @@ body {
 ───────────────────────────────────────────── */
 @layer utilities {
 
-  /* ── Fonte serif ── */
-  .font-serif {
-    font-family: var(--font-serif) !important;
-  }
+
 
   /* ── Botão primário — dourado vibrante ── */
   .btn-primary {
@@ -246,7 +242,7 @@ body {
   .badge-gold {
     display: inline-flex;
     align-items: center;
-    background: linear-gradient(135deg, var(--color-yellow-glow), rgba(232, 184, 75, 0.08));
+    background: linear-gradient(135deg, var(--color-yellow-glow), rgba(255, 159, 10, 0.08));
     color: var(--color-yellow);
     border: 1px solid var(--color-yellow-border);
     font-size: 0.68rem;

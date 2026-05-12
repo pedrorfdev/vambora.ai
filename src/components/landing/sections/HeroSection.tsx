@@ -1,12 +1,4 @@
-// ─────────────────────────────────────────────
-// HeroSection.tsx
-//
-// Imagem de fundo tela cheia + overlay escuro
-// Copy do manifesto integrado acima do prompt
-// Leque de destinos abaixo — hover pula, click gera
-// ─────────────────────────────────────────────
-
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, type Dispatch, type SetStateAction } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 
 interface HeroSectionProps {
@@ -14,153 +6,126 @@ interface HeroSectionProps {
   error?: string | null
 }
 
-// Imagem de fundo — Rio de Janeiro aerial, alta qualidade
 const BG_IMAGE = 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=2400&q=90'
 
-// Destinos do leque — 7 cards em semicírculo
 const FAN_DESTINATIONS = [
-  {
-    url: 'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=300&q=80',
-    label: 'Florianópolis', estado: 'SC',
-    prompt: 'Florianópolis, SC — 4 dias, praias e gastronomia local',
-    rot: -54, tx: -260, ty: 40,
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1612294037637-ec328d0e075e?auto=format&fit=crop&w=300&q=80',
-    label: 'Chapada', estado: 'BA',
-    prompt: 'Chapada Diamantina, BA — 6 dias, trilhas e cachoeiras',
-    rot: -36, tx: -160, ty: 10,
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1548963670-c94ea3d0e9ea?auto=format&fit=crop&w=300&q=80',
-    label: 'Salvador', estado: 'BA',
-    prompt: 'Salvador, BA — 4 dias, cultura e gastronomia baiana',
-    rot: -18, tx: -70, ty: -4,
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=300&q=80',
-    label: 'Rio de Janeiro', estado: 'RJ',
-    prompt: 'Rio de Janeiro, RJ — 5 dias, pontos turísticos e cultura carioca',
-    rot: 0, tx: 0, ty: -8,
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?auto=format&fit=crop&w=300&q=80',
-    label: 'Lençóis', estado: 'MA',
-    prompt: 'Lençóis Maranhenses, MA — 4 dias, dunas e lagoas',
-    rot: 18, tx: 70, ty: -4,
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1619546952812-520e98064a52?auto=format&fit=crop&w=300&q=80',
-    label: 'Gramado', estado: 'RS',
-    prompt: 'Gramado, RS — 3 dias, gastronomia e clima de montanha',
-    rot: 36, tx: 160, ty: 10,
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=300&q=80',
-    label: 'Pantanal', estado: 'MS',
-    prompt: 'Pantanal, MS — 4 dias, ecoturismo e vida selvagem',
-    rot: 54, tx: 260, ty: 40,
-  },
+  { url: 'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=300&q=80', label: 'Florianópolis', estado: 'SC', prompt: 'Florianópolis, SC — 4 dias, praias e gastronomia local', rot: -54, tx: -120 },
+  { url: 'https://images.unsplash.com/photo-1612294037637-ec328d0e075e?auto=format&fit=crop&w=300&q=80', label: 'Chapada', estado: 'BA', prompt: 'Chapada Diamantina, BA — 6 dias, trilhas e cachoeiras', rot: -36, tx: -80 },
+  { url: 'https://images.unsplash.com/photo-1548963670-c94ea3d0e9ea?auto=format&fit=crop&w=300&q=80', label: 'Salvador', estado: 'BA', prompt: 'Salvador, BA — 4 dias, cultura e gastronomia baiana', rot: -18, tx: -40 },
+  { url: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=300&q=80', label: 'Rio de Janeiro', estado: 'RJ', prompt: 'Rio de Janeiro, RJ — 5 dias, pontos turísticos e cultura carioca', rot: 0, tx: 0 },
+  { url: 'https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?auto=format&fit=crop&w=300&q=80', label: 'Lençóis', estado: 'MA', prompt: 'Lençóis Maranhenses, MA — 4 dias, dunas e lagoas', rot: 18, tx: 40 },
+  { url: 'https://images.unsplash.com/photo-1619546952812-520e98064a52?auto=format&fit=crop&w=300&q=80', label: 'Gramado', estado: 'RS', prompt: 'Gramado, RS — 3 dias, gastronomia e clima de montanha', rot: 36, tx: 80 },
+  { url: 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=300&q=80', label: 'Pantanal', estado: 'MS', prompt: 'Pantanal, MS — 4 dias, ecoturismo e vida selvagem', rot: 54, tx: 120 },
 ]
 
 const ROTATING_WORDS = ['praias', 'trilhas', 'festivais', 'sabores', 'aventuras', 'histórias']
+const QUICK_PROMPTS = ['Beto Carrero, 3 dias com crianças', 'Nordeste roots, 7 dias na praia', 'Serra gaúcha com frio, casal']
 
-// Card individual do leque
-function FanCard({
-  dest, index, isVisible, onSelect,
-}: {
+const CARD_W = 110
+const CARD_H = 150
+// Hit area generosa e estável — nunca move, só o card visual anima dentro
+const HIT_W = 160
+const HIT_H = 220
+
+function FanCard({ dest, index, isVisible, onSelect, hoveredIndex, setHoveredIndex }: {
   dest: typeof FAN_DESTINATIONS[0]
   index: number
   isVisible: boolean
-  onSelect: (prompt: string) => void
+  onSelect: (p: string) => void
+  hoveredIndex: number | null
+  setHoveredIndex: Dispatch<SetStateAction<number | null>>
 }) {
-  const [hovered, setHovered] = useState(false)
-  const W = 90
-  const H = 120
+  const isHovered = hoveredIndex === index
+  const isOther = hoveredIndex !== null && hoveredIndex !== index
+  const [hasOpened, setHasOpened] = useState(false)
+
+  useEffect(() => {
+    if (isVisible) {
+      const t = setTimeout(() => setHasOpened(true), 1400)
+      return () => clearTimeout(t)
+    }
+  }, [isVisible])
+
+  const entryDelay = hasOpened ? 0 : index * 0.08
 
   return (
-    <motion.button
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      onClick={() => onSelect(dest.prompt)}
-      className="absolute rounded-xl overflow-hidden cursor-pointer"
+    // Wrapper invisível — área de hit fixa, nunca anima posição
+    // O cursor SEMPRE está dentro dele independente de onde o card visual foi
+    <motion.div
+      className="absolute cursor-pointer"
       style={{
-        width: W,
-        height: H,
+        width: HIT_W,
+        height: HIT_H,
         left: '50%',
         bottom: 0,
-        marginLeft: -W / 2,
+        marginLeft: -HIT_W / 2,
         transformOrigin: '50% 100%',
-        border: hovered
-          ? '1.5px solid var(--color-yellow-border)'
-          : '1px solid rgba(255,255,255,0.12)',
-        boxShadow: hovered
-          ? 'var(--shadow-yellow), 0 8px 32px rgba(0,0,0,0.5)'
-          : '0 4px 20px rgba(0,0,0,0.4)',
-        transition: 'border-color 0.2s, box-shadow 0.2s',
+        zIndex: isHovered ? 50 : FAN_DESTINATIONS.length - Math.abs(index - 3),
       }}
-      initial={{ rotate: dest.rot, x: dest.tx, y: 120, opacity: 0, scale: 0.7 }}
-      animate={isVisible
-        ? {
-          rotate: dest.rot,
-          x: dest.tx,
-          y: hovered ? dest.ty - 14 : dest.ty,
-          opacity: 1,
-          scale: hovered ? 1.08 : 1,
-          transition: {
-            rotate: { duration: 0.7, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] },
-            x: { duration: 0.7, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] },
-            y: hovered
-              ? { duration: 0.25, ease: 'easeOut' }
-              : { duration: 0.7, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] },
-            opacity: { duration: 0.5, delay: index * 0.06 },
-            scale: { duration: 0.2, ease: 'easeOut' },
-          },
-        }
-        : {}
-      }
+      initial={{ rotate: dest.rot, x: dest.tx, y: 100, opacity: 0 }}
+      animate={isVisible ? {
+        rotate: dest.rot,
+        x: dest.tx,
+        y: 0,
+        opacity: isOther ? 0 : 1,
+        transition: {
+          rotate: { duration: 0.8, delay: entryDelay, ease: [0.22, 1, 0.36, 1] },
+          x: { duration: 0.8, delay: entryDelay, ease: [0.22, 1, 0.36, 1] },
+          y: { duration: 0.8, delay: entryDelay, ease: [0.22, 1, 0.36, 1] },
+          opacity: { duration: 0.3, delay: isOther ? 0 : entryDelay },
+        },
+      } : {}}
+      onHoverStart={() => setHoveredIndex(index)}
+      onHoverEnd={() => setHoveredIndex(prev => prev === index ? null : prev)}
+      onClick={() => onSelect(dest.prompt)}
     >
-      <img
-        src={dest.url}
-        alt={dest.label}
-        className="w-full h-full object-cover"
-        loading="lazy"
-      />
-
-      {/* Overlay base */}
-      <div
-        className="absolute inset-0"
+      {/* Card visual — anima dentro do wrapper estático */}
+      <motion.div
+        className="absolute rounded-xl overflow-hidden"
         style={{
-          background: hovered
-            ? 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%, transparent 100%)'
-            : 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%)',
-          transition: 'background 0.2s',
+          width: CARD_W,
+          height: CARD_H,
+          left: (HIT_W - CARD_W) / 2,
+          bottom: 0,
+          border: isHovered ? '1.5px solid rgba(232,184,75,0.7)' : '1px solid rgba(255,255,255,0.12)',
+          boxShadow: isHovered ? '0 0 24px rgba(232,184,75,0.35), 0 8px 32px rgba(0,0,0,0.5)' : '0 4px 20px rgba(0,0,0,0.4)',
+          transition: 'border-color 0.2s, box-shadow 0.2s',
+          pointerEvents: 'none', // o wrapper cuida dos eventos
         }}
-      />
+        animate={{
+          y: isHovered ? -18 : 0,
+          scale: isHovered ? 1.08 : 1,
+        }}
+        transition={{ duration: 0.22, ease: 'easeOut' }}
+      >
+        <img src={dest.url} alt={dest.label} className="w-full h-full object-cover" loading="lazy" />
+        <div className="absolute inset-0" style={{
+          background: isHovered
+            ? 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)'
+            : 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%)',
+          transition: 'background 0.2s',
+        }} />
 
-      {/* Label */}
-      <div className="absolute bottom-0 left-0 right-0 p-2 text-center">
-        <p
-          className="text-xs font-semibold leading-tight"
-          style={{ color: hovered ? 'var(--color-yellow)' : 'rgba(255,255,255,0.9)' }}
-        >
-          {dest.label}
-        </p>
-        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.6rem' }}>
-          {dest.estado}
-        </p>
-      </div>
-
-      {/* Glow no topo ao hover */}
-      {hovered && (
+        {/* Linha dourada topo */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           className="absolute inset-x-0 top-0 h-0.5"
-          style={{ background: 'var(--color-yellow)' }}
+          style={{ background: 'linear-gradient(to right, transparent, rgba(232,184,75,0.9), transparent)' }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.15 }}
         />
-      )}
-    </motion.button>
+
+        <div className="absolute bottom-0 left-0 right-0 p-2 text-center">
+          <p className="font-semibold leading-tight" style={{
+            fontSize: '0.65rem',
+            color: isHovered ? 'rgba(232,184,75,1)' : 'rgba(255,255,255,0.9)',
+            transition: 'color 0.2s',
+          }}>
+            {dest.label}
+          </p>
+          <p style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.45)' }}>{dest.estado}</p>
+        </div>
+      </motion.div>
+    </motion.div>
   )
 }
 
@@ -168,18 +133,12 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
   const [prompt, setPrompt] = useState('')
   const [isCollapsing, setIsCollapsing] = useState(false)
   const [fanVisible, setFanVisible] = useState(false)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [wordIndex, setWordIndex] = useState(0)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  useEffect(() => {
-    const t = setTimeout(() => setFanVisible(true), 600)
-    return () => clearTimeout(t)
-  }, [])
-
-  useEffect(() => {
-    const t = setInterval(() => setWordIndex(i => (i + 1) % ROTATING_WORDS.length), 2400)
-    return () => clearInterval(t)
-  }, [])
+  useEffect(() => { const t = setTimeout(() => setFanVisible(true), 600); return () => clearTimeout(t) }, [])
+  useEffect(() => { const t = setInterval(() => setWordIndex(i => (i + 1) % ROTATING_WORDS.length), 2400); return () => clearInterval(t) }, [])
 
   function handleSubmit(p?: string) {
     const text = p ?? prompt
@@ -189,99 +148,34 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSubmit()
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit() }
   }
 
   return (
     <section className="relative min-h-dvh flex flex-col items-center justify-center overflow-hidden">
-
-      {/* ── Imagem de fundo ── */}
+      {/* Fundo */}
       <div className="absolute inset-0">
-        <img
-          src={BG_IMAGE}
-          alt="Brasil"
-          className="w-full h-full object-cover"
-          style={{ filter: 'brightness(0.45) saturate(0.8)' }}
-        />
-        {/* Overlay gradiente — escurece bottom pra o leque e top pro conteúdo */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: [
-              'linear-gradient(to bottom, rgba(15,14,13,0.7) 0%, rgba(15,14,13,0.3) 30%, rgba(15,14,13,0.3) 60%, rgba(15,14,13,0.92) 100%)',
-            ].join(', '),
-          }}
-        />
+        <img src={BG_IMAGE} alt="Brasil" className="w-full h-full object-cover" style={{ filter: 'brightness(0.45) saturate(0.8)' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(15,14,13,0.7) 0%, rgba(15,14,13,0.3) 30%, rgba(15,14,13,0.3) 60%, rgba(15,14,13,0.95) 100%)' }} />
       </div>
 
-      {/* ── Conteúdo central ── */}
+      {/* Conteúdo central */}
       <motion.div
         className="relative flex flex-col items-center gap-6 px-6 text-center w-full"
-        style={{ zIndex: 2, paddingBottom: '220px' }}
-        animate={isCollapsing
-          ? { opacity: 0, scale: 0.96, transition: { duration: 0.35, delay: 0.2 } }
-          : { opacity: 1, scale: 1 }
-        }
+        style={{ zIndex: 2, paddingBottom: '240px' }}
+        animate={isCollapsing ? { opacity: 0, scale: 0.96, transition: { duration: 0.3, delay: 0.2 } } : { opacity: 1, scale: 1 }}
       >
-        {/* Logo mark */}
-        <motion.div
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col items-center gap-4"
-        >
-          {/* Logo icon */}
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{
-              background: 'rgba(232,184,75,0.15)',
-              border: '1px solid rgba(232,184,75,0.35)',
-              backdropFilter: 'blur(8px)',
-            }}
-          >
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              <path d="M11 2L13.5 8H20L14.5 12L16.5 18.5L11 14.5L5.5 18.5L7.5 12L2 8H8.5L11 2Z"
-                fill="var(--color-yellow)" opacity="0.9" />
-            </svg>
+        <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="flex flex-col items-center gap-4">
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: 'rgba(232,184,75,0.12)', border: '1px solid rgba(232,184,75,0.3)', backdropFilter: 'blur(8px)' }}>
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M11 2L13.5 8H20L14.5 12L16.5 18.5L11 14.5L5.5 18.5L7.5 12L2 8H8.5L11 2Z" fill="var(--color-yellow)" opacity="0.9" /></svg>
           </div>
-
-          {/* Nome */}
-          <h1
-            className="font-serif tracking-tight"
-            style={{
-              fontSize: 'clamp(3rem, 7vw, 5.5rem)',
-              color: '#F2EEE8',
-              lineHeight: 0.95,
-              fontWeight: 400,
-              letterSpacing: '-0.02em',
-            }}
-          >
+          <h1 style={{ fontSize: 'clamp(3rem, 7vw, 5.5rem)', color: '#F2EEE8', lineHeight: 0.95, fontWeight: 800, letterSpacing: '-0.02em' }}>
             vambora<span style={{ color: 'var(--color-yellow)' }}>.ai</span>
           </h1>
-
-          {/* Manifesto integrado */}
-          <p
-            style={{
-              fontSize: 'clamp(1rem, 2vw, 1.2rem)',
-              color: 'rgba(242,238,232,0.55)',
-              maxWidth: '480px',
-              lineHeight: 1.5,
-              fontWeight: 300,
-            }}
-          >
+          <p style={{ fontSize: 'clamp(0.95rem, 2vw, 1.15rem)', color: 'rgba(242,238,232,0.5)', maxWidth: '440px', lineHeight: 1.6, fontWeight: 300 }}>
             O Brasil é grande demais pra ficar parado.{' '}
             <AnimatePresence mode="wait">
-              <motion.span
-                key={wordIndex}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.2 }}
-                style={{ color: 'var(--color-yellow)', fontWeight: 400 }}
-              >
+              <motion.span key={wordIndex} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.2 }} style={{ color: 'var(--color-yellow)', fontWeight: 500, display: 'inline-block' }}>
                 {ROTATING_WORDS[wordIndex]}
               </motion.span>
             </AnimatePresence>
@@ -289,124 +183,75 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
           </p>
         </motion.div>
 
-        {/* Input de prompt */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full max-w-xl"
-        >
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{
-              background: 'rgba(28,26,24,0.85)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              boxShadow: '0 8px 48px rgba(0,0,0,0.5)',
-              transition: 'border-color 0.2s, box-shadow 0.2s',
-            }}
-            onFocus={() => { }}
-          >
-            <textarea
-              ref={textareaRef}
-              value={prompt}
-              onChange={e => setPrompt(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={'Descreva sua viagem...\nEx: Floripa em maio, 4 dias, casal, R$2.000'}
-              rows={3}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className="w-full max-w-xl">
+          <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(22,20,18,0.88)', border: '1px solid rgba(255,255,255,0.09)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', boxShadow: '0 8px 48px rgba(0,0,0,0.55)' }}>
+            <textarea ref={textareaRef} value={prompt} onChange={e => setPrompt(e.target.value)} onKeyDown={handleKeyDown}
+              placeholder={'Descreva sua viagem...\nEx: Floripa em maio, 4 dias, casal, R$2.000'} rows={3}
               className="w-full bg-transparent resize-none outline-none leading-relaxed px-6 pt-5 pb-3"
-              style={{
-                color: '#F2EEE8',
-                fontSize: '0.9375rem',
-                caretColor: 'var(--color-yellow)',
-                fontFamily: 'var(--font-sans)',
-              }}
+              style={{ color: '#F2EEE8', fontSize: '0.9375rem', caretColor: 'var(--color-yellow)', fontFamily: 'var(--font-sans)' }}
             />
+            
+            <div className="px-6 pb-3 flex flex-wrap gap-2">
+              {QUICK_PROMPTS.map(ex => (
+                <button
+                  key={ex}
+                  onClick={() => {
+                    setPrompt(ex)
+                    if (textareaRef.current) textareaRef.current.focus()
+                  }}
+                  className="text-xs px-3 py-1.5 rounded-full whitespace-nowrap transition-colors"
+                  style={{ 
+                    background: 'rgba(255,255,255,0.04)', 
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    color: 'rgba(242,238,232,0.6)'
+                  }}
+                  onMouseOver={e => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.08)'
+                    e.currentTarget.style.color = '#F2EEE8'
+                  }}
+                  onMouseOut={e => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                    e.currentTarget.style.color = 'rgba(242,238,232,0.6)'
+                  }}
+                >
+                  {ex}
+                </button>
+              ))}
+            </div>
 
             <div className="flex items-center justify-between px-5 pb-4 pt-1">
               <div>
                 {error
                   ? <p className="text-xs font-medium" style={{ color: '#f87171' }}>{error}</p>
-                  : <p style={{ fontSize: '0.7rem', color: 'rgba(242,238,232,0.25)' }}>
-                    Enter para gerar · Shift+Enter nova linha
-                  </p>
+                  : <p style={{ fontSize: '0.68rem', color: 'rgba(242,238,232,0.22)' }}>Enter para gerar · Shift+Enter nova linha</p>
                 }
               </div>
-              <button
-                onClick={() => handleSubmit()}
-                disabled={!prompt.trim()}
-                className="btn-primary disabled:opacity-25 disabled:cursor-not-allowed"
-                style={{ padding: '0.6rem 1.25rem', fontSize: '0.875rem' }}
-              >
+              <button onClick={() => handleSubmit()} disabled={!prompt.trim()} className="btn-primary disabled:opacity-25 disabled:cursor-not-allowed" style={{ padding: '0.55rem 1.2rem', fontSize: '0.875rem' }}>
                 Vambora →
               </button>
             </div>
           </div>
-
-          {/* Hint leque */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="mt-3 text-center"
-            style={{ fontSize: '0.7rem', color: 'rgba(242,238,232,0.3)', letterSpacing: '0.08em' }}
-          >
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }} className="mt-3 text-center" style={{ fontSize: '0.68rem', color: 'rgba(242,238,232,0.28)', letterSpacing: '0.06em' }}>
             ou escolha um destino abaixo
           </motion.p>
         </motion.div>
       </motion.div>
 
-      {/* ── Leque de destinos ── */}
+      {/* Leque */}
       <motion.div
         className="absolute bottom-0 left-0 right-0 flex justify-center"
-        style={{
-          height: '200px',
-          zIndex: 3,
-          pointerEvents: isCollapsing ? 'none' : 'auto',
-        }}
-        animate={isCollapsing
-          ? { opacity: 0, y: 40, transition: { duration: 0.3 } }
-          : { opacity: 1, y: 0 }
-        }
+        style={{ height: '220px', zIndex: 3, pointerEvents: isCollapsing ? 'none' : 'auto' }}
+        animate={isCollapsing ? { opacity: 0, y: 30, transition: { duration: 0.25 } } : { opacity: 1, y: 0 }}
       >
         {FAN_DESTINATIONS.map((dest, i) => (
-          <FanCard
-            key={dest.label}
-            dest={dest}
-            index={i}
-            isVisible={fanVisible}
-            onSelect={(p) => handleSubmit(p)}
-          />
+          <FanCard key={dest.label} dest={dest} index={i} isVisible={fanVisible} onSelect={handleSubmit} hoveredIndex={hoveredIndex} setHoveredIndex={setHoveredIndex} />
         ))}
       </motion.div>
 
-      {/* ── Scroll hint ── */}
-      <motion.div
-        className="absolute right-8 bottom-8 flex flex-col items-center gap-2"
-        style={{ zIndex: 4 }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-      >
-        <span
-          style={{
-            fontSize: '0.6rem',
-            color: 'rgba(242,238,232,0.25)',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            writingMode: 'vertical-rl',
-          }}
-        >
-          explorar
-        </span>
-        <motion.div
-          animate={{ y: [0, 5, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ color: 'rgba(242,238,232,0.25)', fontSize: '0.7rem' }}
-        >
-          ↓
-        </motion.div>
+      {/* Scroll hint */}
+      <motion.div className="absolute right-6 bottom-6 flex flex-col items-center gap-2" style={{ zIndex: 4 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}>
+        <motion.div animate={{ y: [0, 4, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} style={{ color: 'rgba(242,238,232,0.2)', fontSize: '0.7rem' }}>↓</motion.div>
+        <span style={{ fontSize: '0.6rem', color: 'rgba(242,238,232,0.2)', letterSpacing: '0.14em', textTransform: 'uppercase', writingMode: 'vertical-rl' }}>explorar</span>
       </motion.div>
     </section>
   )

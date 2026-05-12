@@ -14,10 +14,10 @@ const STATS = [
 ]
 
 const LINES = [
-  { text: 'O Brasil é grande demais', serif: true },
-  { text: 'pra ficar parado.', serif: true },
-  { text: 'São 8,5 milhões de km² de praias, trilhas, sabores,', serif: false },
-  { text: 'festas e histórias esperando por você.', serif: false },
+  { text: 'O Brasil é grande demais', isMain: true },
+  { text: 'pra ficar parado.', isMain: true },
+  { text: 'São 8,5 milhões de km² de praias, trilhas, sabores,', isMain: false },
+  { text: 'festas e histórias esperando por você.', isMain: false },
 ]
 
 function BackgroundOrb({ x, y, size, delay }: { x: string; y: string; size: number; delay: number }) {
@@ -64,13 +64,14 @@ export function ManifestoSection() {
               initial={{ opacity: 0, y: 28 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: i * 0.13, ease: [0.22, 1, 0.36, 1] }}
-              className={line.serif ? 'font-serif' : ''}
+              className=""
               style={{
-                fontSize: line.serif ? 'clamp(2.2rem, 5vw, 4rem)' : 'clamp(0.95rem, 2vw, 1.2rem)',
-                color: line.serif ? 'var(--color-fg-primary)' : 'var(--color-fg-secondary)',
-                lineHeight: line.serif ? 1.15 : 1.7,
-                fontWeight: line.serif ? 400 : 300,
-                marginBottom: line.serif ? '0.1em' : '0',
+                fontSize: line.isMain ? 'clamp(2.2rem, 5vw, 4rem)' : 'clamp(0.95rem, 2vw, 1.2rem)',
+                color: line.isMain ? 'var(--color-fg-primary)' : 'var(--color-fg-secondary)',
+                lineHeight: line.isMain ? 1.15 : 1.7,
+                fontWeight: line.isMain ? 800 : 400,
+                marginBottom: line.isMain ? '0.1em' : '0',
+                letterSpacing: line.isMain ? '-0.02em' : '0',
               }}
             >
               {line.text.includes('vambora')
@@ -105,12 +106,12 @@ export function ManifestoSection() {
               }}
             >
               <p
-                className="font-serif"
+                className=""
                 style={{
                   fontSize: 'clamp(2rem, 4vw, 3rem)',
                   color: 'var(--color-yellow)',
                   lineHeight: 1,
-                  fontWeight: 400,
+                  fontWeight: 800,
                 }}
               >
                 {stat.value}<span style={{ fontSize: '0.6em', opacity: 0.7 }}>{stat.suffix}</span>
