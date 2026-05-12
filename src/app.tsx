@@ -1,39 +1,36 @@
 // ─────────────────────────────────────────────
 // App.tsx — Controlador de telas do Vambora.ai
-//
-// idle     → LandingPage (hero + seções)
-// loading  → LoadingScreen
-// success  → GuideView
-// error    → LandingPage com erro
 // ─────────────────────────────────────────────
 
-import { AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'motion/react'
 import { useGuide } from './hooks/useGuide'
 import { useTheme } from './hooks/useTheme'
 import { LandingPage } from './components/landing/LandingPage'
 import { LoadingScreen } from './components/prompt/LoadingScreen'
 import { GuideView } from './components/guide/GuideView'
 import { ThemeToggle } from './components/ui/ThemeToggle'
-import { motion } from 'motion/react'
 
 export function App() {
   const guide = useGuide()
   const { theme, toggle } = useTheme()
 
-  function handlePromptSubmit(prompt: string) {
+  // Seta o prompt no estado e dispara — generate() lê do estado
+  async function handlePromptSubmit(prompt: string) {
     guide.setPrompt(prompt)
-    guide.generate(prompt)
+    // setTimeout garante que o setState do setPrompt foi processado
+    setTimeout(() => guide.generate(), 0)
   }
 
   return (
-    <main
-      className="min-h-dvh transition-colors duration-300"
+    <main className="min-h-dvh transition-colors duration-300"
       style={{ backgroundColor: 'var(--color-bg-base)', color: 'var(--color-fg-primary)' }}
     >
-      {/* Toggle de tema — fixo no canto */}
-      <div className="fixed top-4 right-4 z-50">
-        <ThemeToggle theme={theme} onToggle={toggle} />
-      </div>
+      {/* Toggle de tema — só aparece fora da landing (hero já é sempre dark) */}
+      {guide.status !== 'idle' && guide.status !== 'error' && (
+        <div className="fixed top-4 right-4 z-50">
+          <ThemeToggle theme={theme} onToggle={toggle} />
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
 
@@ -42,11 +39,11 @@ export function App() {
             key="landing"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.35 }}
           >
-            <LandingPage 
-              onPromptSubmit={handlePromptSubmit} 
+            <LandingPage
+              onPromptSubmit={handlePromptSubmit}
               error={guide.error}
             />
           </motion.div>

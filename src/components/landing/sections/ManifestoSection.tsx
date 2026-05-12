@@ -1,38 +1,35 @@
 // ─────────────────────────────────────────────
-// ManifestoSection.tsx — Copy de tela cheia
+// ManifestoSection.tsx — Prova de valor
 //
-// Fundo quase preto, texto elegante centralizado,
-// elementos sutis flutuando. Cada linha de texto
-// entra escalonada conforme entra na viewport.
+// Copy emocional + 3 stats + CTA scroll pro topo
 // ─────────────────────────────────────────────
 
 import { useRef } from 'react'
 import { motion, useInView } from 'motion/react'
 
-const LINES = [
-  { text: 'O Brasil é grande demais',  serif: true,  size: 'clamp(2.2rem, 5vw, 4rem)' },
-  { text: 'pra ficar parado.',          serif: true,  size: 'clamp(2.2rem, 5vw, 4rem)' },
-  { text: '',                           serif: false, size: '1rem' }, // espaço
-  { text: 'São 8,5 milhões de km² de praias, trilhas,',  serif: false, size: 'clamp(1rem, 2vw, 1.2rem)' },
-  { text: 'sabores, festas e histórias esperando por você.',  serif: false, size: 'clamp(1rem, 2vw, 1.2rem)' },
-  { text: '',                           serif: false, size: '1rem' },
-  { text: 'Você só precisa dizer: vambora.',  serif: true, size: 'clamp(1.4rem, 3vw, 2rem)' },
+const STATS = [
+  { value: '27', label: 'estados mapeados', suffix: '' },
+  { value: '30', label: 'segundos pra um roteiro', suffix: 's' },
+  { value: '100', label: 'gratuito pra sempre', suffix: '%' },
 ]
 
-// Elementos decorativos flutuando ao fundo
+const LINES = [
+  { text: 'O Brasil é grande demais', serif: true },
+  { text: 'pra ficar parado.', serif: true },
+  { text: 'São 8,5 milhões de km² de praias, trilhas, sabores,', serif: false },
+  { text: 'festas e histórias esperando por você.', serif: false },
+]
+
 function BackgroundOrb({ x, y, size, delay }: { x: string; y: string; size: number; delay: number }) {
   return (
     <motion.div
       className="absolute rounded-full pointer-events-none"
       style={{
-        left: x,
-        top: y,
-        width: size,
-        height: size,
+        left: x, top: y, width: size, height: size,
         background: 'radial-gradient(circle, var(--color-yellow-glow) 0%, transparent 70%)',
-        filter: 'blur(40px)',
+        filter: 'blur(50px)',
       }}
-      animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0.7, 0.4] }}
+      animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0.6, 0.3] }}
       transition={{ duration: 4 + delay, repeat: Infinity, ease: 'easeInOut', delay }}
     />
   )
@@ -47,69 +44,107 @@ export function ManifestoSection() {
       className="relative min-h-dvh flex items-center justify-center overflow-hidden py-32"
       style={{ background: 'var(--color-bg-base)' }}
     >
-      {/* Orbs decorativos */}
-      <BackgroundOrb x="10%" y="20%" size={300} delay={0} />
-      <BackgroundOrb x="70%" y="60%" size={250} delay={1.5} />
-      <BackgroundOrb x="40%" y="80%" size={200} delay={0.8} />
-
-      {/* Linha decorativa horizontal */}
+      {/* Linha topo */}
       <div
         className="absolute top-0 left-0 right-0 h-px"
         style={{ background: 'linear-gradient(to right, transparent, var(--color-yellow-border), transparent)' }}
       />
-      <div
-        className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(to right, transparent, var(--color-yellow-border), transparent)' }}
-      />
+
+      <BackgroundOrb x="5%" y="15%" size={320} delay={0} />
+      <BackgroundOrb x="65%" y="55%" size={280} delay={1.5} />
+      <BackgroundOrb x="35%" y="75%" size={220} delay={0.8} />
 
       <div ref={ref} className="relative max-w-4xl mx-auto px-8 text-center">
-        {LINES.map((line, i) => {
-          if (!line.text) return <div key={i} className="h-6" />
-          return (
+
+        {/* Copy */}
+        <div className="mb-16">
+          {LINES.map((line, i) => (
             <motion.p
               key={i}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 28 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.8,
-                delay: i * 0.12,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className={line.serif ? 'text-serif' : ''}
+              transition={{ duration: 0.8, delay: i * 0.13, ease: [0.22, 1, 0.36, 1] }}
+              className={line.serif ? 'font-serif' : ''}
               style={{
-                fontSize: line.size,
+                fontSize: line.serif ? 'clamp(2.2rem, 5vw, 4rem)' : 'clamp(0.95rem, 2vw, 1.2rem)',
                 color: line.serif ? 'var(--color-fg-primary)' : 'var(--color-fg-secondary)',
-                lineHeight: 1.3,
+                lineHeight: line.serif ? 1.15 : 1.7,
                 fontWeight: line.serif ? 400 : 300,
+                marginBottom: line.serif ? '0.1em' : '0',
               }}
             >
-              {/* Destaca "vambora" em amarelo */}
-              {line.text.includes('vambora') ? (
-                <>
+              {line.text.includes('vambora')
+                ? <>
                   {line.text.split('vambora')[0]}
                   <span style={{ color: 'var(--color-yellow)' }}>vambora</span>
                   {line.text.split('vambora')[1]}
                 </>
-              ) : line.text}
+                : line.text
+              }
             </motion.p>
-          )
-        })}
+          ))}
+        </div>
 
-        {/* CTA sutil */}
+        {/* Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="grid grid-cols-3 gap-6 mb-16 max-w-2xl mx-auto"
+        >
+          {STATS.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 16 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.7 + i * 0.1 }}
+              className="flex flex-col items-center gap-2 p-5 rounded-2xl"
+              style={{
+                background: 'var(--color-bg-card)',
+                border: '1px solid var(--color-bg-border)',
+              }}
+            >
+              <p
+                className="font-serif"
+                style={{
+                  fontSize: 'clamp(2rem, 4vw, 3rem)',
+                  color: 'var(--color-yellow)',
+                  lineHeight: 1,
+                  fontWeight: 400,
+                }}
+              >
+                {stat.value}<span style={{ fontSize: '0.6em', opacity: 0.7 }}>{stat.suffix}</span>
+              </p>
+              <p
+                className="text-xs text-center"
+                style={{ color: 'var(--color-fg-muted)', lineHeight: 1.4 }}
+              >
+                {stat.label}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: LINES.length * 0.12 + 0.2 }}
-          className="mt-16"
+          transition={{ duration: 0.6, delay: 1.0 }}
         >
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="btn-outline"
+            className="btn-primary"
           >
             Começar agora →
           </button>
         </motion.div>
       </div>
+
+      {/* Linha bottom */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-px"
+        style={{ background: 'linear-gradient(to right, transparent, var(--color-yellow-border), transparent)' }}
+      />
     </section>
   )
 }
