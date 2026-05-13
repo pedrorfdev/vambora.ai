@@ -23,7 +23,7 @@ export function App() {
     <main className="min-h-dvh transition-colors duration-300"
       style={{ backgroundColor: 'var(--color-bg-base)', color: 'var(--color-fg-primary)' }}
     >
-      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[100]">
+      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-100">
         <ThemeToggle theme={theme} onToggle={toggle} />
       </div>
 

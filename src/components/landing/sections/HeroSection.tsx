@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, type Dispatch, type SetStateAction } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
+import logo from '../../../assets/logo.png'
 
 interface HeroSectionProps {
   onSubmit: (prompt: string) => void
@@ -167,7 +168,7 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
       >
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="flex flex-col items-center gap-4">
           <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: 'rgba(232,184,75,0.12)', border: '1px solid rgba(232,184,75,0.3)', backdropFilter: 'blur(8px)' }}>
-            <svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M11 2L13.5 8H20L14.5 12L16.5 18.5L11 14.5L5.5 18.5L7.5 12L2 8H8.5L11 2Z" fill="var(--color-yellow)" opacity="0.9" /></svg>
+            <img src={logo} alt="" />
           </div>
           <h1 style={{ fontSize: 'clamp(3rem, 7vw, 5.5rem)', color: '#F2EEE8', lineHeight: 0.95, fontWeight: 800, letterSpacing: '-0.02em' }}>
             vambora<span style={{ color: 'var(--color-yellow)' }}>.ai</span>
@@ -190,7 +191,7 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
               className="w-full bg-transparent resize-none outline-none leading-relaxed px-6 pt-5 pb-3"
               style={{ color: '#F2EEE8', fontSize: '0.9375rem', caretColor: 'var(--color-yellow)', fontFamily: 'var(--font-sans)' }}
             />
-            
+
             <div className="px-6 pb-3 flex flex-wrap gap-2">
               {QUICK_PROMPTS.map(ex => (
                 <button
@@ -200,8 +201,8 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
                     if (textareaRef.current) textareaRef.current.focus()
                   }}
                   className="text-xs px-3 py-1.5 rounded-full whitespace-nowrap transition-colors"
-                  style={{ 
-                    background: 'rgba(255,255,255,0.04)', 
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
                     border: '1px solid rgba(255,255,255,0.08)',
                     color: 'rgba(242,238,232,0.6)'
                   }}

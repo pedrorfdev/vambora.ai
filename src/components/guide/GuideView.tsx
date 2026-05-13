@@ -94,26 +94,26 @@ function SummaryCard({ card, guide, onClick }: { card: CardDef; guide: Guide; on
         transform: hovered && available ? 'translateY(-4px)' : 'none',
       }}
     >
-      <img 
-        src={card.image} 
-        alt={card.title} 
+      <img
+        src={card.image}
+        alt={card.title}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out"
         style={{ transform: hovered && available ? 'scale(1.08)' : 'scale(1)' }}
       />
-      <div 
-        className="absolute inset-0 transition-opacity duration-300" 
-        style={{ 
+      <div
+        className="absolute inset-0 transition-opacity duration-300"
+        style={{
           background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.1) 100%)',
-          opacity: hovered ? 0.95 : 0.8 
-        }} 
+          opacity: hovered ? 0.95 : 0.8
+        }}
       />
-      
+
       <div className="absolute inset-0 p-6 flex flex-col justify-between">
         <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
           style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.25)' }}>
           {card.icon}
         </div>
-        
+
         <div>
           <h3 className="font-bold text-2xl mb-1.5" style={{ color: '#F2EEE8', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
             {card.title}
@@ -122,7 +122,7 @@ function SummaryCard({ card, guide, onClick }: { card: CardDef; guide: Guide; on
             {card.preview(guide)}
           </p>
           {available && (
-            <motion.div 
+            <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: hovered ? 'auto' : 0, opacity: hovered ? 1 : 0, marginTop: hovered ? 16 : 0 }}
               className="overflow-hidden"
