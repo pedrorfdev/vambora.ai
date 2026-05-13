@@ -299,7 +299,7 @@ export function BookingExpanded({ guide }: { guide: Guide }) {
               <p className="text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--color-fg-muted)' }}>{opt.desc}</p>
             </div>
 
-            <span className="text-sm flex-shrink-0 opacity-40 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--color-yellow)' }}>
+            <span className="text-sm shrink-0 opacity-40 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--color-yellow)' }}>
               ↗
             </span>
           </motion.a>

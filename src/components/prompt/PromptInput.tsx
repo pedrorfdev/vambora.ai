@@ -38,6 +38,7 @@ export function PromptInput({ prompt, error, onPromptChange, onSubmit }: PromptI
       exit={{ opacity: 0, scale: 0.97 }}
       transition={{ duration: 0.4, ease: 'easeInOut' }}
       className="min-h-dvh flex flex-col items-center justify-center px-6 py-24"
+      style={{ background: 'var(--color-bg-base)' }}
     >
 
       {/* ── Logo ── */}
@@ -52,10 +53,10 @@ export function PromptInput({ prompt, error, onPromptChange, onSubmit }: PromptI
         </div>
 
         <div className="flex flex-col items-center gap-3">
-          <h1 className="text-serif text-5xl font-normal tracking-tight text-text-primary">
-            vambora<span className="text-yellow">.ai</span>
+          <h1 className="text-serif text-5xl font-normal tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+            vambora<span style={{ color: 'var(--color-yellow)' }}>.ai</span>
           </h1>
-          <p className="text-base text-center max-w-sm leading-relaxed text-text-secondary">
+          <p className="text-base text-center max-w-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
             Fala o destino, a data e o orçamento —
             <br />a gente monta o roteiro.
           </p>
@@ -69,14 +70,17 @@ export function PromptInput({ prompt, error, onPromptChange, onSubmit }: PromptI
         transition={{ delay: 0.2, duration: 0.6 }}
         className="w-full max-w-2xl"
       >
-        <div className={`
-          rounded-2xl bg-black-card transition-all duration-200
-          focus-within:shadow-[0_0_0_4px_var(--color-yellow-glow)]
-          ${error
-            ? 'border border-red-500/40 shadow-[0_0_0_4px_rgba(239,68,68,0.08)]'
-            : 'border border-black-border focus-within:border-yellow-border'
-          }
-        `}>
+        <div 
+          className={`
+            rounded-2xl transition-all duration-200
+            focus-within:shadow-[0_0_0_4px_var(--color-yellow-glow)]
+            ${error ? 'border-red-500/40 shadow-[0_0_0_4px_rgba(239,68,68,0.08)]' : 'focus-within:border-[var(--color-yellow-border)]'}
+          `}
+          style={{
+            background: 'var(--color-bg-card)',
+            border: error ? '1px solid rgba(239,68,68,0.4)' : '1px solid var(--color-bg-border)'
+          }}
+        >
           <textarea
             ref={textareaRef}
             value={prompt}
@@ -86,15 +90,16 @@ export function PromptInput({ prompt, error, onPromptChange, onSubmit }: PromptI
             rows={3}
             className="
               w-full bg-transparent resize-none outline-none
-              text-text-primary placeholder:text-text-muted
               text-base leading-relaxed
               px-6 pt-5 pb-3
+              placeholder:text-text-muted
             "
+            style={{ color: 'var(--color-text-primary)' }}
           />
 
           {/* Rodapé do input */}
           <div className="flex items-center justify-between px-5 pb-4 pt-1">
-            <span className="text-xs text-text-muted">
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
               Enter para gerar · Shift+Enter nova linha
             </span>
             <button
@@ -126,7 +131,7 @@ export function PromptInput({ prompt, error, onPromptChange, onSubmit }: PromptI
         transition={{ delay: 0.4, duration: 0.5 }}
         className="mt-10 flex flex-col items-center gap-4 w-full max-w-2xl"
       >
-        <p className="text-xs text-text-muted tracking-wide">
+        <p className="text-xs tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
           Experimente um desses:
         </p>
         <div className="flex flex-wrap justify-center gap-2">
@@ -139,10 +144,24 @@ export function PromptInput({ prompt, error, onPromptChange, onSubmit }: PromptI
               }}
               className="
                 text-xs px-4 py-2 rounded-full cursor-pointer
-                bg-black-card border border-black-border text-text-secondary
-                hover:border-yellow-border hover:text-yellow hover:bg-yellow-glow
                 transition-all duration-200
+                hover:shadow-[var(--shadow-yellow)] hover:-translate-y-0.5
               "
+              style={{
+                background: 'var(--color-bg-card)',
+                border: '1px solid var(--color-bg-border)',
+                color: 'var(--color-text-secondary)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-yellow-border)';
+                e.currentTarget.style.color = 'var(--color-yellow)';
+                e.currentTarget.style.background = 'var(--color-yellow-glow)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-bg-border)';
+                e.currentTarget.style.color = 'var(--color-text-secondary)';
+                e.currentTarget.style.background = 'var(--color-bg-card)';
+              }}
             >
               {example}
             </button>
@@ -155,7 +174,8 @@ export function PromptInput({ prompt, error, onPromptChange, onSubmit }: PromptI
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="mt-24 text-xs text-text-muted"
+        className="mt-24 text-xs"
+        style={{ color: 'var(--color-text-muted)' }}
       >
         powered by Gemini · feito com 🇧🇷
       </motion.p>

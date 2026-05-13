@@ -1,207 +1,360 @@
-import { motion } from 'motion/react'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import type { Guide } from '../../types/guide'
+import { usePexelsImage } from '../../hooks/usePexelsImage'
 
 interface GuideHeaderProps {
   guide: Guide
   onReset: () => void
+  onAdapt: (instruction: string) => Promise<void>
+  isAdapting: boolean
+  adaptMessage: string
 }
 
-function unsplashUrl(query: string) {
-  return `https://images.unsplash.com/featured/?${encodeURIComponent(query)}&w=1400&q=90`
+// ── Fontes dinâmicas ──
+const DISPLAY_FONTS = [
+  '"Anton", sans-serif',
+  '"Cinzel", serif',
+  '"Playfair Display", serif',
+  '"Bebas Neue", sans-serif',
+  'var(--font-sans)'
+]
+
+function getFontForCity(cityName: string) {
+  // Hash simples para sempre retornar a mesma fonte para a mesma cidade
+  const hash = cityName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  return DISPLAY_FONTS[hash % DISPLAY_FONTS.length]
 }
 
 function WeatherWidget({ clima }: { clima: Guide['clima'] }) {
-  const icon = clima.condicao.toLowerCase().includes('chuv') ? '🌧'
-    : clima.condicao.toLowerCase().includes('nublado') ? '⛅'
-      : clima.condicao.toLowerCase().includes('parcial') ? '🌤'
+  const icon = clima.condicao.toLowerCase().includes('chuv') ? '🌧️'
+    : clima.condicao.toLowerCase().includes('nublado') ? '☁️'
+      : clima.condicao.toLowerCase().includes('parcial') ? '⛅'
         : '☀️'
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ delay: 0.4, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl p-5 flex flex-col gap-3"
+    <div
+      className="flex flex-col items-center justify-center gap-4 rounded-[2rem] p-6 shadow-2xl transition-transform hover:scale-105 duration-300"
       style={{
-        background: 'linear-gradient(135deg, rgba(30,58,138,0.5) 0%, rgba(6,78,59,0.3) 100%)',
-        border: '1px solid rgba(96,165,250,0.25)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        minWidth: 190,
+        background: 'linear-gradient(180deg, rgba(37,99,235,0.3) 0%, rgba(30,58,138,0.7) 100%)',
+        border: '1px solid rgba(96,165,250,0.3)',
+        boxShadow: '0 16px 48px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.15)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        minWidth: 160,
+        maxWidth: 180,
       }}
     >
-      <div className="flex items-center justify-between">
-        <div>
-          <p style={{ fontSize: '2.25rem', fontWeight: 800, color: '#F2EEE8', lineHeight: 1 }}>
-            {clima.temperatura_media}
-          </p>
-          <p className="text-xs mt-1" style={{ color: 'rgba(242,238,232,0.6)' }}>
-            {clima.condicao}
-          </p>
-        </div>
-        <span style={{ fontSize: '2.5rem', lineHeight: 1 }}>{icon}</span>
+      <span
+        style={{
+          fontSize: '3.5rem', lineHeight: 1,
+          filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.4)) grayscale(1) brightness(200%)'
+        }}
+      >
+        {icon}
+      </span>
+
+      <div className="flex flex-col items-center text-center">
+        <p style={{
+          fontSize: '2.8rem', fontWeight: 800, lineHeight: 1,
+          background: 'linear-gradient(to bottom right, #FFFFFF, #93C5FD)',
+          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+          filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.3))'
+        }}>
+          {clima.temperatura_media.replace('°C', '°')}
+        </p>
+        <p className="mt-1.5 text-[0.8rem] font-semibold" style={{ color: '#DBEAFE', lineHeight: 1.2 }}>
+          {clima.condicao}
+        </p>
       </div>
-      <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)' }} />
-      <div>
-        <p className="text-xs font-semibold mb-1" style={{ color: 'rgba(232,184,75,0.9)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+
+      <div style={{ width: '100%', height: 1, background: 'linear-gradient(to right, transparent, rgba(147,197,253,0.3), transparent)' }} />
+
+      <div className="text-center">
+        <p className="text-[0.6rem] font-bold uppercase tracking-[0.15em] mb-1"
+          style={{ color: '#93C5FD' }}>
           Melhor época
         </p>
-        <p className="text-xs" style={{ color: 'rgba(242,238,232,0.55)' }}>{clima.melhor_epoca}</p>
-      </div>
-      {clima.dica && (
-        <p className="text-xs" style={{ color: 'rgba(242,238,232,0.45)', fontStyle: 'italic' }}>
-          💡 {clima.dica}
+        <p className="text-[0.7rem] font-medium leading-tight" style={{ color: '#F8FAFC' }}>
+          {clima.melhor_epoca}
         </p>
-      )}
-    </motion.div>
+      </div>
+    </div>
   )
 }
 
-// Badge grande — datas e pessoas
-function HeroBadge({ children, color = 'gold' }: { children: React.ReactNode; color?: 'gold' | 'blue' }) {
-  const styles = color === 'gold'
-    ? { background: 'rgba(232,184,75,0.15)', border: '1px solid rgba(232,184,75,0.4)', color: '#E8B84B' }
-    : { background: 'rgba(96,165,250,0.15)', border: '1px solid rgba(96,165,250,0.35)', color: '#93C5FD' }
+function GlassBadge({ children, color = 'gold' }: { children: React.ReactNode; color?: 'gold' | 'blue' }) {
+  const s = color === 'gold'
+    ? { bg: 'rgba(232,184,75,0.15)', border: 'rgba(232,184,75,0.4)', text: '#FDE68A' }
+    : { bg: 'rgba(96,165,250,0.15)', border: 'rgba(96,165,250,0.35)', text: '#BFDBFE' }
 
   return (
-    <div
-      className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
-      style={{ ...styles, backdropFilter: 'blur(8px)', letterSpacing: '0.01em' }}
-    >
+    <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-base font-semibold shadow-lg"
+      style={{ background: s.bg, border: `1px solid ${s.border}`, color: s.text, backdropFilter: 'blur(12px)' }}>
       {children}
     </div>
   )
 }
 
-export function GuideHeader({ guide, onReset }: GuideHeaderProps) {
-  const { destino, periodo, clima, dica_golden } = guide
+function DestaquesWidget({ destaques }: { destaques: string[] }) {
+  const [isHovered, setIsHovered] = useState(false)
+  const [isFixed, setIsFixed] = useState(false)
+  const expanded = isHovered || isFixed
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-
-      {/* Nav */}
-      <div className="flex items-center justify-between mb-8">
-        <button onClick={onReset} className="btn-ghost flex items-center gap-2 text-sm">
-          ← Nova busca
-        </button>
-        <span className="badge-gold">guia gerado</span>
-      </div>
-
-      {/* Hero image */}
+    <div
+      className="relative z-50 flex flex-col items-end group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => setIsFixed(!isFixed)}
+    >
       <div
-        className="relative overflow-hidden mb-10"
-        style={{ height: 420, borderRadius: '2rem', boxShadow: '0 32px 64px -16px rgba(0,0,0,0.5)' }}
-      >
-        <img
-          src={unsplashUrl(destino.unsplash_query)}
-          alt={destino.nome}
-          className="w-full h-full object-cover"
-          style={{ filter: 'brightness(0.7) saturate(0.9)' }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(to top, rgba(10,9,8,0.97) 0%, rgba(10,9,8,0.5) 40%, rgba(10,9,8,0.05) 100%)' }}
-        />
-
-        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 flex items-end justify-between gap-6">
-          <div className="flex flex-col gap-4 min-w-0">
-
-            {/* Nome + estado */}
-            <div className="flex items-baseline gap-3 flex-wrap">
-              <h1 style={{
-                fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
-                color: '#F2EEE8', fontWeight: 800,
-                letterSpacing: '-0.025em', lineHeight: 1,
-                textShadow: '0 4px 16px rgba(0,0,0,0.6)',
-              }}>
-                {destino.nome}
-              </h1>
-              <span style={{ fontSize: '1.5rem', color: 'rgba(242,238,232,0.5)', fontWeight: 300 }}>
-                {destino.estado}
-              </span>
-            </div>
-
-            {/* Descrição */}
-            <p style={{ color: 'rgba(242,238,232,0.75)', fontSize: '1rem', maxWidth: '480px', lineHeight: 1.6, textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
-              {destino.descricao_curta}
-            </p>
-
-            {/* Badges de período e pessoas — destaque maior */}
-            <div className="flex flex-wrap gap-2.5">
-              <HeroBadge color="gold">
-                📅 {periodo.data_inicio} → {periodo.data_fim}
-              </HeroBadge>
-              <HeroBadge color="blue">
-                👥 {periodo.total_pessoas} pessoa{periodo.total_pessoas > 1 ? 's' : ''}
-              </HeroBadge>
-              <HeroBadge color="blue">
-                🗓 {periodo.total_dias} dias
-              </HeroBadge>
-            </div>
-
-          </div>
-
-          {/* Weather widget */}
-          <div className="hidden md:block flex-shrink-0">
-            <WeatherWidget clima={clima} />
-          </div>
-        </div>
-      </div>
-
-      {/* Weather mobile */}
-      <div className="md:hidden mb-8">
-        <WeatherWidget clima={clima} />
-      </div>
-
-      {/* Destaques */}
-      <div className="flex flex-wrap gap-2.5 mb-8">
-        {destino.destaques.map(d => (
-          <motion.span
-            key={d}
-            whileHover={{ y: -2, boxShadow: '0 4px 12px rgba(232,184,75,0.12)' }}
-            className="text-xs px-4 py-2 rounded-full"
-            style={{
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-bg-border)',
-              color: 'var(--color-fg-secondary)',
-              cursor: 'default',
-              transition: 'all 0.2s',
-            }}
-          >
-            <span style={{ color: 'var(--color-yellow)', marginRight: 5, opacity: 0.7 }}>✧</span>
-            {d}
-          </motion.span>
-        ))}
-      </div>
-
-      {/* Aviso inferências */}
-      <p className="text-xs mb-6" style={{ color: 'var(--color-fg-muted)', fontStyle: 'italic' }}>
-        * Datas, duração e orçamento não informados foram inferidos com base no destino e contexto.
-      </p>
-
-      {/* Dica golden */}
-      <motion.div
-        initial={{ opacity: 0, x: -12 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.45, duration: 0.5 }}
-        className="relative p-6 rounded-2xl mb-2 overflow-hidden"
+        className="flex items-center gap-2 px-5 py-2.5 rounded-full cursor-pointer transition-all duration-300 shadow-xl"
         style={{
-          background: 'var(--color-yellow-glow)',
-          border: '1px solid var(--color-yellow-border)',
-          boxShadow: '0 8px 32px -8px rgba(232,184,75,0.12)',
+          background: expanded ? 'rgba(232,184,75,0.25)' : 'rgba(15,14,13,0.5)',
+          border: expanded ? '1px solid rgba(232,184,75,0.5)' : '1px solid rgba(255,255,255,0.15)',
+          backdropFilter: 'blur(16px)',
+          color: expanded ? '#FDE68A' : '#F2EEE8'
         }}
       >
-        <div className="absolute left-0 top-3 bottom-3 w-1 rounded-full" style={{ background: 'var(--color-yellow)' }} />
-        <div className="pl-5">
-          <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--color-yellow)' }}>
-            ✦ Dica golden
-          </span>
-          <p className="mt-2.5 text-base leading-relaxed" style={{ color: 'var(--color-fg-primary)' }}>
-            {dica_golden}
-          </p>
-        </div>
-      </motion.div>
+        <span className="text-sm font-bold tracking-[0.1em] uppercase">
+          Destaques
+        </span>
+        <span className="text-[0.6rem] transition-transform duration-300" style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+          ▼
+        </span>
+      </div>
 
-    </motion.div>
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 12, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="absolute top-full right-0 flex flex-col gap-2.5 min-w-[240px]"
+          >
+            {destaques.map((d, i) => (
+              <motion.div
+                key={d}
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="px-5 py-3 rounded-2xl text-right shadow-2xl"
+                style={{
+                  background: 'rgba(15,14,13,0.85)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(24px)',
+                }}
+              >
+                <span className="text-sm font-medium leading-relaxed block" style={{ color: '#F1F5F9' }}>
+                  <span style={{ color: 'var(--color-yellow)', marginRight: '6px' }}>✦</span>
+                  {d}
+                </span>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+export function GuideHeader({ guide, onReset, onAdapt, isAdapting, adaptMessage }: GuideHeaderProps) {
+  const { destino, periodo, clima, dica_golden } = guide
+  const { url: bgUrl } = usePexelsImage(destino.unsplash_query)
+
+  const [adaptOpen, setAdaptOpen] = useState(false)
+  const [adaptValue, setAdaptValue] = useState('')
+
+  function handleAdapt() {
+    if (!adaptValue.trim() || isAdapting) return
+    onAdapt(adaptValue.trim())
+    setAdaptValue('')
+    setAdaptOpen(false)
+  }
+
+  const titleFont = getFontForCity(destino.nome)
+
+  return (
+    <>
+      {/* ── Seção Hero Full Screen ── */}
+      <div className="relative min-h-dvh w-full flex flex-col overflow-hidden">
+
+        {/* Background Image & Overlay */}
+        <div className="absolute inset-0 z-0">
+          {bgUrl && (
+            <img
+              src={bgUrl}
+              alt={destino.nome}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ filter: 'brightness(0.65) saturate(0.95)' }}
+            />
+          )}
+          {!bgUrl && (
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1c1a18 0%, #2a2320 100%)' }} />
+          )}
+          {/* Soft transition to background: goes to transparent instead of hard white base */}
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(to bottom, rgba(10,9,8,0.7) 0%, rgba(10,9,8,0.1) 40%, rgba(0,0,0,0) 85%, var(--color-bg-base) 100%)',
+          }} />
+        </div>
+
+        {/* Foreground Content */}
+        <div className="relative z-10 flex flex-col flex-1 p-6 sm:p-8 md:p-12 w-full mx-auto" style={{ maxWidth: '1800px' }}>
+
+          {/* Top Line: Nav & Destaques */}
+          <div className="flex justify-between items-start w-full">
+            <div className="flex flex-col gap-4">
+              {/* Nav & Adaptar Geral */}
+              <div className="flex flex-col items-start gap-4">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <button onClick={onReset} className="btn-ghost flex items-center gap-2 text-sm text-white hover:bg-white/10 px-4 py-2" style={{ background: 'rgba(10,9,8,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '999px' }}>
+                    ← Nova busca
+                  </button>
+                  <button
+                    onClick={() => setAdaptOpen(!adaptOpen)}
+                    className="btn-ghost flex items-center gap-2 text-sm hover:bg-white/10 px-4 py-2"
+                    style={{ background: 'rgba(232,184,75,0.15)', border: '1px solid rgba(232,184,75,0.3)', color: '#FDE68A', borderRadius: '999px' }}
+                  >
+                    ✦ Adaptar Guia
+                  </button>
+                  <span className="badge-gold hidden md:inline-flex">guia gerado</span>
+                </div>
+
+                {/* Input de Adaptação Geral */}
+                <AnimatePresence>
+                  {adaptOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, height: 0 }}
+                      animate={{ opacity: 1, y: 0, height: 'auto' }}
+                      exit={{ opacity: 0, y: -10, height: 0 }}
+                      className="overflow-hidden w-full max-w-md"
+                    >
+                      <div className="flex gap-2 p-1 bg-black/40 backdrop-blur-xl rounded-full border border-white/15 w-full">
+                        <textarea
+                          value={adaptValue}
+                          onChange={e => setAdaptValue(e.target.value)}
+                          onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleAdapt() } }}
+                          placeholder="Ex: Quero um roteiro mais luxuoso..."
+                          rows={1}
+                          className="flex-1 bg-transparent resize-none outline-none text-sm text-white px-5 py-2.5 placeholder:text-white/50"
+                        />
+                        <button
+                          onClick={handleAdapt}
+                          disabled={!adaptValue.trim() || isAdapting}
+                          className="btn-primary text-xs px-5 py-2 disabled:opacity-30 flex-shrink-0"
+                        >
+                          {isAdapting ? adaptMessage : 'Ir →'}
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Badges Stacked Vertically */}
+              <div className="flex flex-col items-start gap-3 mt-4">
+                <GlassBadge color="gold">📅 {periodo.data_inicio} → {periodo.data_fim}</GlassBadge>
+                <GlassBadge color="blue">👥 {periodo.total_pessoas} pessoa{periodo.total_pessoas > 1 ? 's' : ''}</GlassBadge>
+                <GlassBadge color="blue">🗓 {periodo.total_dias} dias</GlassBadge>
+              </div>
+            </div>
+
+            {/* Destaques (Top Right) */}
+            <DestaquesWidget destaques={destino.destaques} />
+          </div>
+
+          {/* Center Text */}
+          <div className="flex-1 flex flex-col items-center justify-center text-center gap-5 w-full mt-4">
+            <span
+              className="px-4 py-1.5 rounded-full"
+              style={{
+                background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(96,165,250,0.4)',
+                color: '#BFDBFE', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', fontSize: '0.85rem',
+                backdropFilter: 'blur(8px)'
+              }}>
+              {destino.estado}
+            </span>
+            <h1 style={{
+              fontFamily: titleFont,
+              fontSize: 'clamp(4rem, 10vw, 7.5rem)',
+              color: '#FFFFFF', fontWeight: titleFont.includes('sans') ? 900 : 700, lineHeight: 1,
+              letterSpacing: titleFont.includes('sans') ? '-0.03em' : 'normal',
+              textShadow: '0 16px 40px rgba(0,0,0,0.6)'
+            }}>
+              {destino.nome}
+            </h1>
+            <p style={{
+              color: '#F8FAFC', fontSize: '1.25rem', lineHeight: 1.8,
+              fontWeight: 400, maxWidth: '800px', margin: '0 auto',
+              textShadow: '0 4px 16px rgba(0,0,0,0.8)'
+            }}>
+              {destino.descricao_curta}
+            </p>
+          </div>
+
+          {/* Bottom Line: Weather and Scroll */}
+          <div className="flex justify-between items-end w-full mt-auto relative h-40">
+            {/* Spacer */}
+            <div className="w-[180px] hidden md:block" />
+
+            {/* Scroll Hint */}
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-0 flex flex-col items-center gap-2 pb-4">
+              <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }} style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1.2rem' }}>↓</motion.div>
+              <span className="text-[0.65rem] uppercase tracking-[0.2em] font-semibold" style={{ color: 'rgba(255,255,255,0.7)' }}>Comece a explorar</span>
+            </div>
+
+            {/* Weather */}
+            <div className="w-auto flex justify-end">
+              <WeatherWidget clima={clima} />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* ── Seção Abaixo do Hero ── */}
+      <div className="w-full max-w-[1800px] mx-auto mt-12 md:mt-16 px-4 sm:px-6 md:px-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className="relative p-6 md:p-8 rounded-[2rem] overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left group"
+          style={{
+            background: 'linear-gradient(145deg, var(--color-bg-card) 0%, var(--color-bg-soft) 100%)',
+            border: '1px solid var(--color-yellow-border)',
+            boxShadow: 'var(--shadow-card)',
+          }}
+        >
+          {/* Decorative Glows */}
+          <div className="absolute -top-32 -left-32 w-64 h-64 rounded-full blur-[100px] transition-transform duration-700 group-hover:scale-125" style={{ background: 'var(--color-yellow)', opacity: 0.12 }} />
+          <div className="absolute -bottom-32 -right-32 w-64 h-64 rounded-full blur-[100px] transition-transform duration-700 group-hover:scale-125" style={{ background: 'var(--color-yellow)', opacity: 0.08 }} />
+
+          <div className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center text-3xl flex-shrink-0 relative z-10"
+            style={{
+              background: 'linear-gradient(135deg, var(--color-yellow) 0%, var(--color-yellow-dim) 100%)',
+              color: '#161513',
+              boxShadow: '0 8px 32px rgba(232,184,75,0.4), inset 0 2px 0 rgba(255,255,255,0.4)'
+            }}>
+            <span style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}>💡</span>
+          </div>
+
+          <div className="relative z-10 flex-1">
+            <span className="text-[0.65rem] font-black uppercase tracking-[0.25em] mb-3 block"
+              style={{
+                background: 'linear-gradient(135deg, var(--color-yellow) 0%, var(--color-yellow-dim) 100%)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
+              }}>
+              Dica Golden
+            </span>
+            <p className="text-lg md:text-xl font-medium leading-relaxed"
+              style={{ color: 'var(--color-fg-primary)' }}>
+              {dica_golden}
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </>
   )
 }

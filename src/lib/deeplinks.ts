@@ -16,9 +16,14 @@ interface DeepLinkParams {
 }
 
 // dd/mm/aaaa → aaaa-mm-dd
-function toISO(brDate: string): string {
-  const [d, m, y] = brDate.split('/')
-  return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
+function toISO(brDate: string): string | null {
+  if (!brDate) return null
+  const parts = brDate.split('/')
+  if (parts.length === 3) {
+    const [d, m, y] = parts
+    return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
+  }
+  return null
 }
 
 // ── Google Hotels ─────────────────────────────
@@ -28,8 +33,14 @@ export function googleHotelsLink(p: DeepLinkParams): string {
   const q = encodeURIComponent(`hotéis em ${p.destino}`)
   const params = new URLSearchParams({ q })
 
-  if (p.dataInicio) params.set('checkin', toISO(p.dataInicio))
-  if (p.dataFim)    params.set('checkout', toISO(p.dataFim))
+  if (p.dataInicio) {
+    const iso = toISO(p.dataInicio)
+    if (iso) params.set('checkin', iso)
+  }
+  if (p.dataFim) {
+    const iso = toISO(p.dataFim)
+    if (iso) params.set('checkout', iso)
+  }
   if (p.adultos)    params.set('adults', String(p.adultos))
 
   return `https://www.google.com/travel/hotels?${params.toString()}`
@@ -41,8 +52,14 @@ export function airbnbLink(p: DeepLinkParams): string {
   const dest = encodeURIComponent(p.destino)
   const params = new URLSearchParams()
 
-  if (p.dataInicio) params.set('checkin',  toISO(p.dataInicio))
-  if (p.dataFim)    params.set('checkout', toISO(p.dataFim))
+  if (p.dataInicio) {
+    const iso = toISO(p.dataInicio)
+    if (iso) params.set('checkin', iso)
+  }
+  if (p.dataFim) {
+    const iso = toISO(p.dataFim)
+    if (iso) params.set('checkout', iso)
+  }
   if (p.adultos)    params.set('adults',   String(p.adultos))
 
   return `https://www.airbnb.com.br/s/${dest}/homes?${params.toString()}`

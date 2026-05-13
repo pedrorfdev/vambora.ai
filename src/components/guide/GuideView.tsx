@@ -256,12 +256,12 @@ export function GuideView({ guide, onReset, onAdapt, isAdapting, adaptMessage }:
         className="min-h-dvh flex flex-col"
         style={{ background: 'var(--color-bg-base)' }}
       >
-        <div className="w-full flex-1 flex flex-col mx-auto px-4 sm:px-6 md:px-10 py-10 md:py-14" style={{ maxWidth: '1800px' }}>
+        <GuideHeader guide={guide} onReset={onReset} onAdapt={onAdapt} isAdapting={isAdapting} adaptMessage={adaptMessage} />
 
-          <GuideHeader guide={guide} onReset={onReset} />
+        <div className="w-full flex-1 flex flex-col mx-auto px-4 sm:px-6 md:px-10 pb-10 md:pb-14" style={{ maxWidth: '1800px' }}>
 
           {/* Grid de cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 mt-10 md:mt-14 flex-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-10 mt-16 md:mt-24 flex-1">
             {CARDS.map((card, i) => (
               <motion.div
                 key={card.id}
@@ -280,7 +280,7 @@ export function GuideView({ guide, onReset, onAdapt, isAdapting, adaptMessage }:
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="mt-14 pt-8 flex flex-col items-center gap-4"
+            className="mt-20 pt-12 flex flex-col items-center gap-4"
             style={{ borderTop: '1px solid var(--color-bg-border)' }}
           >
             <p className="text-xs text-center" style={{ color: 'var(--color-fg-muted)' }}>
