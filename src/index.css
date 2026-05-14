@@ -1,79 +1,105 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Bebas+Neue&family=Abril+Fatface&family=Dancing+Script:wght@700&family=Cinzel:wght@800&family=Lobster&family=Anton&display=swap');
+
+/*
+  Paleta Vambora.ai — Brasil Sofisticado
+  ───────────────────────────────────────
+  Primária:   Verde esmeralda   #00A878  (ação, botões, destaques)
+  Acento:     Âmbar vibrante   #E8A020  (dica golden, elementos especiais)
+  Secondary:  Azul-celeste     #2E86C1  (badges info, links)
+  Base:       Preto quente     #0D0F0E  (quase preto, leve toque verde)
+
+  Fonte: Plus Jakarta Sans (sistema já importado no index.html)
+*/
 
 @theme {
-  /* ── Preto com leve calor ── */
-  --color-black: #0F0E0D;
-  --color-black-soft: #161513;
-  --color-black-card: #1C1A18;
-  --color-black-border: #2A2825;
+  /* ── Base — preto com leve toque verde ── */
+  --color-black: #0D0F0E;
+  --color-black-soft: #141716;
+  --color-black-card: #1A1D1B;
+  --color-black-border: #272B28;
 
-  /* ── Dourado vibrante — mais saturado, mais vivo (Âmbar) ── */
-  --color-yellow: #FF9F0A;
-  --color-yellow-soft: #FFB84D;
-  --color-yellow-dim: #D98308;
-  --color-yellow-glow: rgba(255, 159, 10, 0.14);
-  --color-yellow-border: rgba(255, 159, 10, 0.32);
+  /* ── Verde Esmeralda — cor primária ── */
+  --color-yellow: #00A878;
+  /* renomeação semântica — é a cor primária de ação */
+  --color-yellow-soft: #00C48C;
+  --color-yellow-dim: #007A58;
+  --color-yellow-glow: rgba(0, 168, 120, 0.12);
+  --color-yellow-border: rgba(0, 168, 120, 0.3);
 
-  /* ── Emerald ── */
+  /* ── Âmbar — acento especial (dica golden, momentos únicos) ── */
+  --color-amber: #E8A020;
+  --color-amber-soft: #F0B030;
+  --color-amber-glow: rgba(232, 160, 32, 0.12);
+  --color-amber-border: rgba(232, 160, 32, 0.3);
+
+  /* ── Azul celeste — secondary, info ── */
+  --color-blue: #2E86C1;
+  --color-blue-soft: #5DADE2;
+  --color-blue-glow: rgba(46, 134, 193, 0.12);
+  --color-blue-border: rgba(46, 134, 193, 0.28);
+
+  /* ── Emerald (mantido pra badges de status) ── */
   --color-emerald: #10B981;
   --color-emerald-soft: #34D399;
   --color-emerald-glow: rgba(16, 185, 129, 0.12);
   --color-emerald-border: rgba(16, 185, 129, 0.28);
 
-  /* ── Azul ── */
-  --color-blue: #3B82F6;
-  --color-blue-soft: #60A5FA;
-  --color-blue-glow: rgba(59, 130, 246, 0.12);
-  --color-blue-border: rgba(59, 130, 246, 0.28);
-
-  /* ── Texto — levemente quente ── */
-  --color-text-primary: #F2EEE8;
-  --color-text-secondary: #9E9B94;
-  --color-text-muted: #5E5B55;
-  --color-text-inverted: #0F0E0D;
+  /* ── Texto ── */
+  --color-text-primary: #EDF2EF;
+  --color-text-secondary: #96A09A;
+  --color-text-muted: #566059;
+  --color-text-inverted: #0D0F0E;
 
   /* ── Tipografia ── */
   --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
 
-  /* ── Sombras com mais brilho ── */
-  --shadow-yellow: 0 0 40px rgba(255, 159, 10, 0.25), 0 0 80px rgba(255, 159, 10, 0.1);
-  --shadow-card: 0 4px 40px rgba(0, 0, 0, 0.6);
-  --shadow-card-hover: 0 8px 60px rgba(0, 0, 0, 0.7);
+  /* ── Sombras ── */
+  --shadow-yellow: 0 0 40px rgba(0, 168, 120, 0.22), 0 0 80px rgba(0, 168, 120, 0.08);
+  --shadow-amber: 0 0 32px rgba(232, 160, 32, 0.2);
+  --shadow-card: 0 4px 40px rgba(0, 0, 0, 0.55);
 
   /* ── Semânticas dark (padrão) ── */
-  --color-bg-base: #0F0E0D;
-  --color-bg-soft: #161513;
-  --color-bg-card: #1C1A18;
-  --color-bg-border: #2A2825;
-  --color-fg-primary: #F2EEE8;
-  --color-fg-secondary: #9E9B94;
-  --color-fg-muted: #5E5B55;
+  --color-bg-base: #0D0F0E;
+  --color-bg-soft: #141716;
+  --color-bg-card: #1A1D1B;
+  --color-bg-border: #272B28;
+  --color-fg-primary: #EDF2EF;
+  --color-fg-secondary: #96A09A;
+  --color-fg-muted: #566059;
 }
 
-/* ─────────────────────────────────────────────
-   TEMA LIGHT
-───────────────────────────────────────────── */
+/* ── Tema Light ── */
 [data-theme="light"] {
-  --color-bg-base: #FAFAF7;
-  --color-bg-soft: #F3F1EC;
+  --color-bg-base: #F7FAF8;
+  --color-bg-soft: #EEF3F0;
   --color-bg-card: #FFFFFF;
-  --color-bg-border: #E5E2DA;
-  --color-fg-primary: #1A1815;
-  --color-fg-secondary: #6B6860;
-  --color-fg-muted: #A8A59D;
+  --color-bg-border: #DDE8E2;
+  --color-fg-primary: #111814;
+  --color-fg-secondary: #4A6058;
+  --color-fg-muted: #8AA099;
 
-  --color-text-primary: #1A1815;
-  --color-text-secondary: #6B6860;
-  --color-text-muted: #A8A59D;
-  --color-text-inverted: #FAFAF7;
+  --color-yellow: #007A58;
+  --color-yellow-soft: #00A878;
+  --color-yellow-dim: #005C42;
+  --color-yellow-glow: rgba(0, 122, 88, 0.1);
+  --color-yellow-border: rgba(0, 122, 88, 0.28);
 
+  --color-amber: #C07010;
+  --color-amber-soft: #D88820;
+  --color-amber-glow: rgba(192, 112, 16, 0.1);
+  --color-amber-border: rgba(192, 112, 16, 0.28);
+
+  --color-text-primary: #111814;
+  --color-text-secondary: #4A6058;
+  --color-text-muted: #8AA099;
+  --color-text-inverted: #F7FAF8;
+
+  --shadow-yellow: 0 0 32px rgba(0, 122, 88, 0.15);
   --shadow-card: 0 4px 32px rgba(0, 0, 0, 0.08);
 }
 
-/* ─────────────────────────────────────────────
-   Base
-───────────────────────────────────────────── */
+/* ── Base ── */
 
 html {
   font-family: var(--font-sans);
@@ -83,7 +109,6 @@ html {
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease, color 0.3s ease;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  /* Plus Jakarta Sans optical features */
 }
 
 body {
@@ -91,7 +116,6 @@ body {
   background-color: var(--color-bg-base);
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -109,40 +133,38 @@ body {
   background: var(--color-yellow-dim);
 }
 
-/* Seleção */
 ::selection {
   background: var(--color-yellow-glow);
   color: var(--color-yellow);
 }
 
-/* ─────────────────────────────────────────────
-   Utilitários
-───────────────────────────────────────────── */
 @layer utilities {
 
+  .font-serif {
+    font-family: var(--font-serif) !important;
+  }
 
-
-  /* ── Botão primário — dourado vibrante ── */
+  /* Botão primário — verde esmeralda */
   .btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.375rem;
     background: linear-gradient(135deg, var(--color-yellow) 0%, var(--color-yellow-soft) 100%);
-    color: #0F0E0D;
+    color: #fff;
     font-family: var(--font-sans);
     font-weight: 700;
     font-size: 0.875rem;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     padding: 0.75rem 1.75rem;
     border-radius: 9999px;
     border: none;
     cursor: pointer;
-    transition: opacity 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    transition: opacity 0.2s, box-shadow 0.2s, transform 0.15s;
   }
 
   .btn-primary:hover:not(:disabled) {
-    opacity: 0.92;
+    opacity: 0.9;
     box-shadow: var(--shadow-yellow);
     transform: translateY(-2px);
   }
@@ -156,38 +178,38 @@ body {
     cursor: not-allowed;
   }
 
-  /* ── Botão outline ── */
+  /* Botão outline */
   .btn-outline {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.375rem;
-    background-color: transparent;
+    background: transparent;
     color: var(--color-yellow);
     font-family: var(--font-sans);
     font-weight: 600;
     font-size: 0.875rem;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     padding: 0.75rem 1.75rem;
     border-radius: 9999px;
     border: 1.5px solid var(--color-yellow-border);
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
   }
 
   .btn-outline:hover {
-    background-color: var(--color-yellow-glow);
+    background: var(--color-yellow-glow);
     border-color: var(--color-yellow);
     box-shadow: var(--shadow-yellow);
     transform: translateY(-2px);
   }
 
-  /* ── Botão ghost ── */
+  /* Botão ghost */
   .btn-ghost {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    background-color: transparent;
+    background: transparent;
     color: var(--color-fg-secondary);
     font-family: var(--font-sans);
     font-weight: 500;
@@ -196,20 +218,20 @@ body {
     border-radius: 0.75rem;
     border: none;
     cursor: pointer;
-    transition: color 0.2s ease, background-color 0.2s ease;
+    transition: color 0.2s, background 0.2s;
   }
 
   .btn-ghost:hover {
     color: var(--color-fg-primary);
-    background-color: var(--color-bg-card);
+    background: var(--color-bg-card);
   }
 
-  /* ── Card base ── */
+  /* Card */
   .card {
-    background-color: var(--color-bg-card);
+    background: var(--color-bg-card);
     border: 1px solid var(--color-bg-border);
     border-radius: 1.25rem;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
   }
 
   .card-interactive:hover {
@@ -218,11 +240,11 @@ body {
     transform: translateY(-2px);
   }
 
-  /* ── Badges ── */
+  /* Badges */
   .badge-emerald {
     display: inline-flex;
     align-items: center;
-    background-color: var(--color-emerald-glow);
+    background: var(--color-emerald-glow);
     color: var(--color-emerald-soft);
     border: 1px solid var(--color-emerald-border);
     font-size: 0.68rem;
@@ -233,10 +255,26 @@ body {
     text-transform: uppercase;
   }
 
+  /* badge-gold agora é âmbar — usado na dica golden e momentos especiais */
   .badge-gold {
     display: inline-flex;
     align-items: center;
-    background: linear-gradient(135deg, var(--color-yellow-glow), rgba(255, 159, 10, 0.08));
+    background: var(--color-amber-glow);
+    color: var(--color-amber);
+    border: 1px solid var(--color-amber-border);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* badge-green — ações primárias */
+  .badge-green {
+    display: inline-flex;
+    align-items: center;
+    background: var(--color-yellow-glow);
     color: var(--color-yellow);
     border: 1px solid var(--color-yellow-border);
     font-size: 0.68rem;
@@ -250,7 +288,7 @@ body {
   .badge-blue {
     display: inline-flex;
     align-items: center;
-    background-color: var(--color-blue-glow);
+    background: var(--color-blue-glow);
     color: var(--color-blue-soft);
     border: 1px solid var(--color-blue-border);
     font-size: 0.68rem;
@@ -261,9 +299,9 @@ body {
     text-transform: uppercase;
   }
 
-  /* ── Input premium ── */
+  /* Input */
   .input-vambora {
-    background-color: var(--color-bg-card);
+    background: var(--color-bg-card);
     border: 1.5px solid var(--color-bg-border);
     border-radius: 1rem;
     color: var(--color-fg-primary);
@@ -272,7 +310,7 @@ body {
     padding: 0.875rem 1.25rem;
     outline: none;
     width: 100%;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
 
   .input-vambora::placeholder {
@@ -284,22 +322,29 @@ body {
     box-shadow: 0 0 0 4px var(--color-yellow-glow);
   }
 
-  /* ── Divisor ── */
   .divider {
     border: none;
     border-top: 1px solid var(--color-bg-border);
   }
 
-  /* ── Glow decorativo ── */
-  .glow-gold {
-    box-shadow: var(--shadow-yellow);
-  }
-
-  /* ── Gradiente de texto dourado ── */
-  .text-gradient-gold {
-    background: linear-gradient(135deg, var(--color-yellow) 0%, var(--color-yellow-soft) 50%, var(--color-yellow) 100%);
+  /* Gradiente de texto verde */
+  .text-gradient-green {
+    background: linear-gradient(135deg, var(--color-yellow) 0%, var(--color-yellow-soft) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Âmbar — usado só na dica golden */
+  .text-amber {
+    color: var(--color-amber);
+  }
+
+  .bg-amber-glow {
+    background: var(--color-amber-glow);
+  }
+
+  .border-amber {
+    border-color: var(--color-amber-border);
   }
 }
