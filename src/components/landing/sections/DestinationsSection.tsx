@@ -2,8 +2,9 @@
 // DestinationsSection.tsx — Carrossel de destinos
 // ─────────────────────────────────────────────
 
-import { useRef, useState } from 'react'
 import { motion, useInView } from 'motion/react'
+import { useRef, useState, useEffect } from 'react'
+import { getPexelsUrl } from '../../../hooks/usePexelsImage'
 
 interface DestinationsSectionProps {
   onSelect: (prompt: string) => void
@@ -13,50 +14,50 @@ const DESTINATIONS = [
   {
     nome: 'Florianópolis', estado: 'SC',
     descricao: 'Praias, lagoa e gastronomia açoriana',
-    url: 'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?w=500&q=80',
+    url: 'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?w=400&q=80',
     prompt: 'Florianópolis, SC — 4 dias, aproveitar praias e gastronomia local',
   },
   {
     nome: 'Rio de Janeiro', estado: 'RJ',
     descricao: 'Cristo, Copacabana e samba',
-    url: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=500&q=80',
+    url: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=400&q=80',
     prompt: 'Rio de Janeiro, RJ — 5 dias, pontos turísticos clássicos e cultura carioca',
   },
   {
     nome: 'Chapada Diamantina', estado: 'BA',
     descricao: 'Trilhas, cachoeiras e cavernas',
-    url: 'https://images.unsplash.com/photo-1612294037637-ec328d0e075e?w=500&q=80',
+    url: 'https://images.unsplash.com/photo-1612294037637-ec328d0e075e?w=400&q=80',
     prompt: 'Chapada Diamantina, BA — 6 dias, trilhas e ecoturismo, orçamento moderado',
   },
   {
     nome: 'Salvador', estado: 'BA',
     descricao: 'Pelourinho, axé e acarajé',
-    url: 'https://images.unsplash.com/photo-1548963670-c94ea3d0e9ea?w=500&q=80',
+    url: 'https://images.unsplash.com/photo-1548963670-c94ea3d0e9ea?w=400&q=80',
     prompt: 'Salvador, BA — 4 dias, cultura, história e gastronomia baiana',
   },
   {
     nome: 'Bonito', estado: 'MS',
     descricao: 'Rios cristalinos e mergulho',
-    url: 'https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=500&q=80',
+    url: 'https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?w=400&q=80',
     prompt: 'Bonito, MS — 4 dias, ecoturismo e mergulho em rios',
   },
   {
     nome: 'Lençóis Maranhenses', estado: 'MA',
     descricao: 'Dunas brancas e lagoas azuis',
-    url: 'https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?w=500&q=80',
+    url: 'https://images.unsplash.com/photo-1619546952812-520e98064a52?w=400&q=80',
     prompt: 'Lençóis Maranhenses, MA — 4 dias, dunas e lagoas, melhor época',
   },
   {
     nome: 'Gramado', estado: 'RS',
     descricao: 'Clima europeu e chocolates',
-    url: 'https://images.unsplash.com/photo-1619546952812-520e98064a52?w=500&q=80',
+    url: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=400&q=80',
     prompt: 'Gramado, RS — 3 dias, gastronomia e clima de montanha',
   },
   {
-    nome: 'Amazônia', estado: 'AM',
-    descricao: 'O pulmão do mundo e ecoturismo',
-    url: 'https://images.unsplash.com/photo-1590247813693-5541d1c609fd?w=500&q=80',
-    prompt: 'Amazônia, AM — 4 dias, contato com a natureza e cultura local',
+    nome: 'Paraty', estado: 'RJ',
+    descricao: 'Centro histórico e cachaça artesanal',
+    url: 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=400&q=80',
+    prompt: 'Paraty, RJ — 3 dias, história, natureza e cachaça artesanal',
   },
 ]
 
@@ -68,6 +69,13 @@ function DestCard({
   onSelect: (p: string) => void
 }) {
   const [hovered, setHovered] = useState(false)
+  const [imgUrl, setImgUrl] = useState(dest.url)
+
+  useEffect(() => {
+    getPexelsUrl(`${dest.nome} ${dest.estado} landmark`).then(url => {
+      if (!url.startsWith('linear')) setImgUrl(url)
+    })
+  }, [dest.nome, dest.estado])
 
   return (
     <motion.div
@@ -81,13 +89,13 @@ function DestCard({
       className="relative rounded-2xl overflow-hidden cursor-pointer shrink-0"
       style={{
         width: 260, height: 340,
-        border: hovered ? '1px solid var(--color-yellow-border)' : '1px solid var(--color-bg-border)',
+        border: hovered ? '1px solid var(--color-yellow-border)' : '1px solid rgba(255,255,255,0.06)',
         boxShadow: hovered ? 'var(--shadow-yellow)' : undefined,
         transition: 'border-color 0.25s ease, box-shadow 0.25s ease',
       }}
     >
       <img
-        src={dest.url}
+        src={imgUrl}
         alt={dest.nome}
         className="w-full h-full object-cover"
         style={{
@@ -109,8 +117,8 @@ function DestCard({
         <span className="badge-yellow text-xs">{dest.estado}</span>
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-5">
-        <h3 className="text-base font-medium" style={{ color: 'var(--color-text-primary)' }}>{dest.nome}</h3>
-        <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-secondary)' }}>{dest.descricao}</p>
+        <h3 className="text-base font-medium" style={{ color: '#F0EDE6' }}>{dest.nome}</h3>
+        <p className="text-xs mt-0.5" style={{ color: 'rgba(240,237,230,0.55)' }}>{dest.descricao}</p>
         <motion.div
           animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 8 }}
           transition={{ duration: 0.2 }}
@@ -135,7 +143,7 @@ export function DestinationsSection({ onSelect }: DestinationsSectionProps) {
   }
 
   return (
-    <section className="py-28 overflow-hidden" style={{ background: 'var(--color-bg-base)' }}>
+    <section className="py-28 overflow-hidden" style={{ background: '#0A0A0A' }}>
       <div className="max-w-7xl mx-auto px-8">
         <motion.div
           ref={titleRef}
@@ -153,11 +161,11 @@ export function DestinationsSection({ onSelect }: DestinationsSectionProps) {
             </span>
             <h2
               className="text-serif font-normal"
-              style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: 'var(--color-fg-primary)', lineHeight: 1.2 }}
+              style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#F0EDE6', lineHeight: 1.2 }}
             >
               Explore sua próxima aventura.
             </h2>
-            <p className="mt-3 text-base" style={{ color: 'var(--color-fg-secondary)' }}>
+            <p className="mt-3 text-base" style={{ color: 'rgba(240,237,230,0.45)' }}>
               Clique em qualquer destino para gerar o guia completo.
             </p>
           </div>
@@ -167,7 +175,7 @@ export function DestinationsSection({ onSelect }: DestinationsSectionProps) {
                 key={dir}
                 onClick={() => scrollBy(dir)}
                 className="btn-ghost w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ border: '1px solid var(--color-bg-border)' }}
+                style={{ border: '1px solid rgba(255,255,255,0.08)' }}
               >
                 {dir === 'left' ? '←' : '→'}
               </button>

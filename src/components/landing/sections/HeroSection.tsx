@@ -223,7 +223,7 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
               <div>
                 {error
                   ? <p className="text-xs font-medium" style={{ color: '#f87171' }}>{error}</p>
-                  : <p style={{ fontSize: '0.68rem', color: 'var(--color-fg-muted)' }}>Enter para gerar · Shift+Enter nova linha</p>
+                  : <p className="hidden sm:block" style={{ fontSize: '0.68rem', color: 'var(--color-fg-muted)' }}>Enter para gerar · Shift+Enter nova linha</p>
                 }
               </div>
               <button onClick={() => handleSubmit()} disabled={!prompt.trim()} className="btn-primary disabled:opacity-25 disabled:cursor-not-allowed" style={{ padding: '0.55rem 1.2rem', fontSize: '0.875rem' }}>

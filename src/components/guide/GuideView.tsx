@@ -37,23 +37,23 @@ function WeatherIcon({ condicao, size = 40 }: { condicao: string; size?: number 
 function ClimateWidget({ clima }: { clima: Guide['clima'] }) {
   return (
     <div className="flex flex-col gap-3 px-4 py-4 rounded-2xl w-full"
-      style={{ background: 'rgba(46,134,193,0.12)', border: '1px solid rgba(46,134,193,0.25)' }}>
+      style={{ background: 'var(--color-blue-glow)', border: '1px solid var(--color-blue-border)' }}>
       {/* Linha 1: ícone + temp + condição */}
       <div className="flex items-center gap-3">
         <WeatherIcon condicao={clima.condicao} size={38} />
         <div className="flex-1 min-w-0">
-          <p className="font-bold leading-none" style={{ fontSize: '1.6rem', color: '#fff' }}>
+          <p className="font-bold leading-none" style={{ fontSize: '1.6rem', color: 'var(--color-fg-primary)' }}>
             {clima.temperatura_media}
           </p>
-          <p className="text-[0.72rem] mt-1 truncate" style={{ color: 'rgba(255,255,255,0.5)' }}>{clima.condicao}</p>
+          <p className="text-[0.72rem] mt-1 truncate" style={{ color: 'var(--color-fg-secondary)' }}>{clima.condicao}</p>
         </div>
       </div>
       {/* Divisor */}
-      <div style={{ height: 1, background: 'rgba(255,255,255,0.07)' }} />
+      <div style={{ height: 1, background: 'var(--color-bg-border)' }} />
       {/* Melhor época — texto completo, sem clamp */}
       <div className="flex flex-col gap-0.5">
-        <p className="text-[0.6rem] font-bold uppercase tracking-widest" style={{ color: 'rgba(232,160,32,0.8)' }}>Melhor época</p>
-        <p className="text-[0.72rem] font-medium leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{clima.melhor_epoca}</p>
+        <p className="text-[0.6rem] font-bold uppercase tracking-widest" style={{ color: 'var(--color-amber)' }}>Melhor época</p>
+        <p className="text-[0.72rem] font-semibold leading-relaxed" style={{ color: 'var(--color-fg-muted)' }}>{clima.melhor_epoca}</p>
       </div>
     </div>
   )
@@ -299,26 +299,24 @@ function DestinationTitle({ destino, compact }: { destino: Guide['destino']; com
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col gap-3 pt-2 pl-4"
         >
-          <h1 style={{
+          <h1 className="text-(--color-fg-primary) lg:text-white" style={{
             fontSize: 'clamp(1.8rem, 2.8vw, 2.8rem)',
-            fontWeight: 800, color: '#fff',
+            fontWeight: 800,
             letterSpacing: '-0.03em', lineHeight: 1.05,
-            textShadow: '0 2px 24px rgba(0,0,0,0.9)',
+            textShadow: '0 2px 24px rgba(0,0,0,0.5)',
           }}>
             {destino.nome}
           </h1>
-          <p style={{
+          <p className="text-(--color-fg-muted) lg:text-white/60" style={{
             fontSize: '0.82rem', fontWeight: 300,
-            color: 'rgba(255,255,255,0.4)',
             marginTop: '-0.1rem',
           }}>
             {destino.estado} · {destino.pais}
           </p>
-          <p style={{
+          <p className="text-(--color-fg-secondary) lg:text-white/70" style={{
             fontSize: '0.85rem',
-            color: 'rgba(255,255,255,0.5)',
             lineHeight: 1.65,
-            textShadow: '0 1px 8px rgba(0,0,0,0.6)',
+            textShadow: '0 1px 8px rgba(0,0,0,0.4)',
             maxWidth: '340px',
           }}>
             {destino.descricao_curta}
@@ -410,15 +408,14 @@ function CenterPanel({ guide, activePanel, dicaModalOpen, setDicaModalOpen, setA
             <Sparkles size={14} color="var(--color-yellow)" />
           </div>
           <div className="flex-1 min-w-0">
-            <span className="text-[0.6rem] font-bold uppercase tracking-widest block mb-0.5" style={{ color: 'var(--color-yellow)' }}>
+            <span className="text-xs text-yellow font-bold uppercase tracking-widest block mb-0.5">
               ✦ Vai uma dica.ai?
             </span>
-            <p className="text-xs font-medium leading-relaxed"
-              style={{ color: 'var(--color-fg-primary)' }}>
+            <p className="text-xs font-medium leading-relaxed text-zinc-300">
               {guide.dica_golden}
             </p>
             {guide.clima.dica && (
-              <p className="mt-1.5 text-[0.7rem] leading-relaxed" style={{ color: 'var(--color-fg-secondary)', fontStyle: 'italic' }}>
+              <p className="mt-1.5 text-[0.7rem] leading-relaxed text-zinc-400">
                 🌤 {guide.clima.dica}
               </p>
             )}

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
 import { motion } from 'motion/react'
-import { mapsLink, symplaLink, googleHotelsLink, airbnbLink, flightsLink, decolarLink } from '../../lib/deeplinks'
+import { useEffect, useState } from 'react'
 import { getPexelsUrl } from '../../hooks/usePexelsImage'
+import { airbnbLink, decolarLink, flightsLink, googleHotelsLink, mapsLink, symplaLink } from '../../lib/deeplinks'
 import type { Guide } from '../../types/guide'
 
 // ── Glass card — theme-aware ──────────────────
@@ -180,41 +180,41 @@ export function BudgetExpanded({ guide }: { guide: Guide }) {
             style={glassStyle()}
           >
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-base"
+              <div className="w-9 h-9 shrink-0 rounded-xl flex items-center justify-center text-base"
                 style={{ background: `${item.color}20`, border: `1px solid ${item.color}35` }}>
                 {item.icon}
               </div>
-              <div>
-                <p className="text-xs font-semibold" style={{ color: 'var(--color-fg-primary)' }}>{item.label}</p>
-                <p style={{ fontSize: '0.62rem', color: 'var(--color-fg-muted)' }}>{item.sub}</p>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold truncate" style={{ color: 'var(--color-fg-primary)' }}>{item.label}</p>
+                <p className="truncate" style={{ fontSize: '0.62rem', color: 'var(--color-fg-muted)' }}>{item.sub}</p>
               </div>
             </div>
-            <p className="text-2xl font-bold" style={{ color: item.color }}>{b[item.key]}</p>
+            <p className="text-2xl font-bold wrap-break-word" style={{ color: item.color }}>{b[item.key]}</p>
           </motion.div>
         ))}
       </div>
 
       {/* Totais */}
       <div className="flex flex-col gap-2.5">
-        <div className="flex items-center justify-between px-5 py-3.5 rounded-xl" style={glassStyle()}>
-          <span className="text-sm" style={{ color: 'var(--color-fg-secondary)' }}>Total por pessoa</span>
-          <span className="text-sm font-bold" style={{ color: 'var(--color-fg-primary)' }}>{b.total_por_pessoa}</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 px-5 py-3.5 rounded-xl" style={glassStyle()}>
+          <span className="text-sm shrink-0" style={{ color: 'var(--color-fg-secondary)' }}>Total por pessoa</span>
+          <span className="text-sm font-bold wrap-break-word" style={{ color: 'var(--color-fg-primary)' }}>{b.total_por_pessoa}</span>
         </div>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.4 }}
-          className="flex items-center justify-between px-5 py-4 rounded-2xl"
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-5 py-4 rounded-2xl"
           style={{ background: 'var(--color-yellow-glow)', border: '1px solid var(--color-yellow-border)' }}
         >
-          <div>
+          <div className="min-w-0">
             <p className="font-bold text-sm" style={{ color: 'var(--color-yellow)' }}>Total estimado</p>
-            <p style={{ fontSize: '0.7rem', color: 'var(--color-yellow-border)', marginTop: 2 }}>
+            <p className="truncate" style={{ fontSize: '0.7rem', color: 'var(--color-yellow-border)', marginTop: 2 }}>
               {guide.periodo.total_pessoas} pessoa{guide.periodo.total_pessoas > 1 ? 's' : ''} × {guide.periodo.total_dias} dias
             </p>
           </div>
-          <p className="text-2xl font-bold" style={{ color: 'var(--color-yellow)' }}>{b.total_geral}</p>
+          <p className="text-2xl font-bold wrap-break-word" style={{ color: 'var(--color-yellow)' }}>{b.total_geral}</p>
         </motion.div>
       </div>
 
