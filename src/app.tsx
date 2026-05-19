@@ -40,6 +40,7 @@ export function App() {
             <LandingPage
               onPromptSubmit={handlePromptSubmit}
               error={guide.error}
+              theme={theme}
             />
           </motion.div>
         )}

@@ -59,10 +59,10 @@ export function HighlightSection() {
             className="relative"
           >
             <div
-              className="absolute -inset-4 rounded-3xl pointer-events-none"
+              className="absolute -inset-1 rounded-2xl pointer-events-none"
               style={{
-                background: 'radial-gradient(ellipse at center, var(--color-yellow-glow) 0%, transparent 70%)',
-                filter: 'blur(20px)',
+                background: 'radial-gradient(ellipse at center, var(--color-yellow-glow) 0%, transparent 50%)',
+                filter: 'blur(12px)',
               }}
             />
             <div

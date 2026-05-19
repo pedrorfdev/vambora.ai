@@ -16,15 +16,16 @@ import { LandingFooter } from './sections/LandingFooter'
 interface LandingPageProps {
   onPromptSubmit: (prompt: string) => void
   error?: string | null
+  theme: string
 }
 
-export function LandingPage({ onPromptSubmit, error }: LandingPageProps) {
+export function LandingPage({ onPromptSubmit, error, theme }: LandingPageProps) {
   return (
     <div
       className="min-h-dvh overflow-x-hidden"
       style={{ background: 'var(--color-bg-base)' }}
     >
-      <HeroSection onSubmit={onPromptSubmit} error={error} />
+      <HeroSection onSubmit={onPromptSubmit} error={error} theme={theme} />
       <AboutSection />
       <HighlightSection />
       <ManifestoSection />
