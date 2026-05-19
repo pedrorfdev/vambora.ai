@@ -81,13 +81,13 @@ export function LandingFooter() {
                 Gemini AI
               </a>
               <a
-                href="https://unsplash.com"
+                href="https://www.pexels.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm hover:text-yellow transition-colors"
                 style={{ color: 'var(--color-fg-secondary)', textDecoration: 'none' }}
               >
-                Unsplash
+                Pexels
               </a>
             </div>
           </div>
@@ -111,7 +111,7 @@ export function LandingFooter() {
             className="text-xs"
             style={{ color: 'var(--color-fg-muted)' }}
           >
-            powered by Gemini · imagens via Unsplash
+            powered by Gemini · imagens via Pexels
           </p>
         </motion.div>
       </div>

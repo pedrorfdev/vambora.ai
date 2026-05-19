@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, type Dispatch, type SetStateAction } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import logo from '../../../assets/logo.png'
 import { getPexelsUrl } from '../../../hooks/usePexelsImage'
 
 interface HeroSectionProps {
@@ -8,7 +7,6 @@ interface HeroSectionProps {
   error?: string | null
 }
 
-// Fallback estático se Pexels falhar
 const FALLBACK_BG = 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=2400&q=90'
 
 const FAN_DESTINATIONS = [
@@ -183,14 +181,11 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
       </div>
 
       <motion.div
-        className="relative flex flex-col items-center gap-6 px-6 text-center w-full"
+        className="relative flex flex-col items-center gap-6 px-4 sm:px-6 pt-12 sm:pt-0 text-center w-full"
         style={{ zIndex: 2, paddingBottom: '240px' }}
         animate={isCollapsing ? { opacity: 0, scale: 0.96, transition: { duration: 0.3, delay: 0.2 } } : { opacity: 1, scale: 1 }}
       >
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="flex flex-col items-center gap-4">
-          <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: 'rgba(232,184,75,0.12)', border: '1px solid rgba(232,184,75,0.3)', backdropFilter: 'blur(8px)' }}>
-            <img src={logo} alt="vambora.ai" className="w-6 h-6 object-contain" />
-          </div>
           <h1 style={{ fontSize: 'clamp(3rem, 7vw, 5.5rem)', color: '#F2EEE8', lineHeight: 0.95, fontWeight: 800, letterSpacing: '-0.02em' }}>
             vambora<span style={{ color: 'var(--color-yellow)' }}>.ai</span>
           </h1>
@@ -212,7 +207,7 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
               className="w-full bg-transparent resize-none outline-none leading-relaxed px-6 pt-5 pb-3 placeholder:text-text-muted"
               style={{ color: 'var(--color-fg-primary)', fontSize: '0.9375rem', caretColor: 'var(--color-yellow)', fontFamily: 'var(--font-sans)' }}
             />
-            <div className="px-6 pb-3 flex flex-wrap gap-2">
+            <div className="px-4 sm:px-6 pb-3 flex overflow-x-auto sm:flex-wrap gap-2 scrollbar-hide [scrollbar-width:none]">
               {QUICK_PROMPTS.map(ex => (
                 <button key={ex} onClick={() => { setPrompt(ex); textareaRef.current?.focus() }}
                   className="text-xs px-3 py-1.5 rounded-full whitespace-nowrap transition-colors"
@@ -243,7 +238,7 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
       </motion.div>
 
       <motion.div
-        className="absolute bottom-0 left-0 right-0 flex justify-center"
+        className="absolute bottom-0 left-0 right-0 flex justify-center origin-bottom scale-[0.6] sm:scale-100"
         style={{ height: '220px', zIndex: 3, pointerEvents: isCollapsing ? 'none' : 'auto' }}
         animate={isCollapsing ? { opacity: 0, y: 30, transition: { duration: 0.25 } } : { opacity: 1, y: 0 }}
       >

@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react'
 import { motion, useInView } from 'motion/react'
+import { useRef, useState } from 'react'
 
 interface Destination {
   label: string
@@ -41,13 +41,12 @@ function MapSVG({ destinations, isInView, onSelect }: {
       {/* ── Fundo base do mapa ── */}
       <rect width="400" height="440" fill="var(--color-bg-soft)" rx="0" />
 
-      {/* ── Áreas verdes (parques, vegetação) ── */}
-      <ellipse cx="60" cy="80" rx="40" ry="28" fill="rgba(0,168,120,0.12)" />
-      <ellipse cx="320" cy="60" rx="30" ry="22" fill="rgba(0,168,120,0.1)" />
-      <ellipse cx="280" cy="200" rx="25" ry="18" fill="rgba(0,168,120,0.1)" />
-      <ellipse cx="80" cy="300" rx="35" ry="24" fill="rgba(0,168,120,0.1)" />
-      <ellipse cx="350" cy="360" rx="28" ry="20" fill="rgba(0,168,120,0.1)" />
-      <ellipse cx="160" cy="380" rx="22" ry="16" fill="rgba(0,168,120,0.1)" />
+      {/* ── Áreas verdes dinâmicas abaixo dos pins ── */}
+      {destinations.map((dest, i) => {
+        const cx = (dest.x / 100) * 400
+        const cy = (dest.y / 100) * 440
+        return <ellipse key={`green-${i}`} cx={cx} cy={cy} rx="35" ry="24" fill="rgba(0,168,120,0.12)" />
+      })}
 
       {/* ── Rios / corpos d'água ── */}
       {/* Rio principal — diagonal */}
@@ -127,21 +126,22 @@ function MapSVG({ destinations, isInView, onSelect }: {
               </circle>
             )}
 
-            {/* Sombra */}
-            <ellipse cx={cx} cy={cy + 14} rx="6" ry="2.5" fill="rgba(0,0,0,0.25)" />
+            {/* Sombra (mancha no chão) ajustada para a ponta do pin */}
+            <ellipse cx={cx} cy={cy} rx="6" ry="2.5" fill="rgba(0,0,0,0.25)" />
 
-            {/* Corpo do pin — formato teardrop */}
+            {/* Corpo do pin — formato teardrop. A ponta agora toca exatamente em cy */}
             <path
-              d={`M ${cx},${cy - 14} 
-                  C ${cx - 8},${cy - 14} ${cx - 8},${cy - 6} ${cx},${cy + 2}
-                  C ${cx + 8},${cy - 6} ${cx + 8},${cy - 14} ${cx},${cy - 14} Z`}
+              d={`M ${cx},${cy - 16} 
+                  C ${cx - 8},${cy - 16} ${cx - 8},${cy - 8} ${cx},${cy}
+                  C ${cx + 8},${cy - 8} ${cx + 8},${cy - 16} ${cx},${cy - 16} Z`}
               fill={isHov ? 'var(--color-yellow-soft)' : 'var(--color-yellow)'}
-              style={{ transition: 'fill 0.2s, filter 0.2s', filter: isHov ? 'drop-shadow(0 0 6px var(--color-yellow))' : 'none' }}
+              className="transition-all duration-200"
+              style={{ filter: isHov ? 'drop-shadow(0 0 6px var(--color-yellow))' : 'none' }}
             />
             {/* Círculo interno do pin */}
-            <circle cx={cx} cy={cy - 9} r="3.5"
+            <circle cx={cx} cy={cy - 11} r="3.5"
               fill={isHov ? '#fff' : 'rgba(13,15,14,0.7)'}
-              style={{ transition: 'fill 0.2s' }}
+              className="transition-colors duration-200"
             />
 
             {/* Tooltip HTML-like via foreignObject — mais flexível */}
@@ -203,7 +203,7 @@ export function AboutSection({ onDestinationSelect }: AboutSectionProps) {
   const isInView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section className="py-24 md:py-32 overflow-hidden" style={{ background: 'var(--color-bg-base)' }}>
+    <section className="py-24 md:py-32 overflow-hidden bg-[var(--color-bg-base)]">
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center" ref={ref}>
 
@@ -213,40 +213,31 @@ export function AboutSection({ onDestinationSelect }: AboutSectionProps) {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-xs font-bold uppercase tracking-widest mb-4 block"
-              style={{ color: 'var(--color-yellow)' }}>
+            <span className="text-xs font-bold uppercase tracking-widest mb-4 block text-[var(--color-yellow)]">
               sobre o vambora
             </span>
-            <h2 style={{
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
-              color: 'var(--color-fg-primary)', lineHeight: 1.2,
-              fontWeight: 800, letterSpacing: '-0.02em',
-            }}>
+            <h2 className="text-[clamp(2rem,4vw,3rem)] text-[var(--color-fg-primary)] leading-[1.2] font-extrabold tracking-[-0.02em]">
               Um guia que conhece o Brasil de verdade.
             </h2>
-            <p className="mt-6 text-base md:text-lg leading-relaxed"
-              style={{ color: 'var(--color-fg-secondary)', maxWidth: '440px' }}>
+            <p className="mt-6 text-base md:text-lg leading-relaxed text-[var(--color-fg-secondary)] max-w-[440px]">
               Não é uma lista genérica. É um roteiro feito pra você — com eventos reais,
               preços honestos e dicas que só quem foi sabe.
             </p>
-            <p className="mt-4 text-sm leading-relaxed"
-              style={{ color: 'var(--color-fg-muted)', maxWidth: '380px' }}>
+            <p className="mt-4 text-sm leading-relaxed text-[var(--color-fg-muted)] max-w-[380px]">
               Clique em qualquer destino no mapa para gerar um guia completo na hora.
             </p>
 
             {/* Legenda */}
             <div className="mt-8 flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full flex-shrink-0"
-                  style={{ background: 'var(--color-yellow)', boxShadow: '0 0 8px var(--color-yellow)' }} />
-                <span className="text-xs" style={{ color: 'var(--color-fg-muted)' }}>
+                <div className="w-3 h-3 rounded-full shrink-0 bg-[var(--color-yellow)] shadow-[0_0_8px_var(--color-yellow)]" />
+                <span className="text-xs text-[var(--color-fg-muted)]">
                   Destino popular — clique para gerar o guia
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full flex-shrink-0"
-                  style={{ background: 'rgba(0,168,120,0.3)', border: '1px solid var(--color-yellow)' }} />
-                <span className="text-xs" style={{ color: 'var(--color-fg-muted)' }}>
+                <div className="w-3 h-3 rounded-full shrink-0 bg-[rgba(0,168,120,0.3)] border border-[var(--color-yellow)]" />
+                <span className="text-xs text-[var(--color-fg-muted)]">
                   Destino animado — mais visitado
                 </span>
               </div>
@@ -255,17 +246,15 @@ export function AboutSection({ onDestinationSelect }: AboutSectionProps) {
             {/* Stats */}
             <div className="mt-10 grid grid-cols-3 gap-4">
               {[
-                { value: '27', label: 'estados', suffix: '' },
-                { value: '30', label: 'segundos', suffix: 's' },
-                { value: '100', label: 'gratuito', suffix: '%' },
+                { value: '27', label: 'Estados', suffix: '' },
+                { value: '5.569', label: 'Municípios', suffix: '' },
+                { value: '30', label: 'Segundos', suffix: 's' },
               ].map(s => (
-                <div key={s.label} className="flex flex-col gap-1 p-4 rounded-2xl"
-                  style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-bg-border)' }}>
-                  <p className="text-2xl font-bold"
-                    style={{ color: 'var(--color-yellow)', lineHeight: 1 }}>
-                    {s.value}<span style={{ fontSize: '0.7em', opacity: 0.6 }}>{s.suffix}</span>
+                <div key={s.label} className="flex flex-col gap-1 p-4 rounded-2xl bg-[var(--color-bg-card)] border border-[var(--color-bg-border)]">
+                  <p className="text-2xl font-bold leading-none text-[var(--color-yellow)]">
+                    {s.value}<span className="text-[0.7em] opacity-60">{s.suffix}</span>
                   </p>
-                  <p className="text-xs" style={{ color: 'var(--color-fg-muted)' }}>{s.label}</p>
+                  <p className="text-xs text-[var(--color-fg-muted)]">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -276,13 +265,7 @@ export function AboutSection({ onDestinationSelect }: AboutSectionProps) {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full rounded-3xl overflow-hidden"
-            style={{
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-bg-border)',
-              boxShadow: 'var(--shadow-card)',
-              aspectRatio: '400 / 440',
-            }}
+            className="relative w-full rounded-3xl overflow-hidden bg-[var(--color-bg-card)] border border-[var(--color-bg-border)] shadow-[var(--shadow-card)] aspect-[400/440]"
           >
             <MapSVG
               destinations={DESTINATIONS}

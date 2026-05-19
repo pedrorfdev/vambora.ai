@@ -66,16 +66,16 @@ SCHEMA OBRIGATÓRIO — retorne exatamente nesse formato:
     "unsplash_query": string
   },
   "periodo": {
-    "data_inicio": string,
-    "data_fim": string,
+    "data_inicio": string,   // Formato obrigatório: dd/mm/aa — ex: "23/05/25"
+    "data_fim": string,      // Formato obrigatório: dd/mm/aa — ex: "27/05/25"
     "total_dias": number,
     "total_pessoas": number
   },
   "clima": {
-    "temperatura_media": string,
-    "condicao": string,
-    "melhor_epoca": string,
-    "dica": string
+    "temperatura_media": string,  // Formato obrigatório: faixa compacta, ex: "18–24°C" (mín–máx). Sem texto adicional.
+    "condicao": string,           // Ex: "Ensolarado", "Chuvas frequentes", "Parcialmente nublado"
+    "melhor_epoca": string,       // Máximo uma frase, ex: "Nov a Mar (verão) tem poucos turistas e preços mais baixos" ou "Abr–Jun (seco)"
+    "dica": string                // Uma frase curta e prática sobre o clima local
   },
   "roteiro": [
     {

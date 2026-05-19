@@ -34,46 +34,38 @@ function WeatherWidget({ clima }: { clima: Guide['clima'] }) {
 
   return (
     <div
-      className="flex flex-col items-center justify-center gap-4 rounded-[2rem] p-6 shadow-2xl transition-transform hover:scale-105 duration-300"
+      className="flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl transition-transform hover:scale-[1.02] duration-300"
       style={{
-        background: 'linear-gradient(180deg, rgba(37,99,235,0.3) 0%, rgba(30,58,138,0.7) 100%)',
+        background: 'linear-gradient(135deg, rgba(37,99,235,0.35) 0%, rgba(30,58,138,0.65) 100%)',
         border: '1px solid rgba(96,165,250,0.3)',
-        boxShadow: '0 16px 48px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.15)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        minWidth: 160,
-        maxWidth: 180,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.12)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        minWidth: 200,
       }}
     >
-      <span
-        style={{
-          fontSize: '3.5rem', lineHeight: 1,
-          filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.4)) grayscale(1) brightness(200%)'
-        }}
-      >
+      <span style={{ fontSize: '2rem', lineHeight: 1, filter: 'grayscale(1) brightness(200%)' }}>
         {icon}
       </span>
 
-      <div className="flex flex-col items-center text-center">
+      <div className="flex flex-col">
         <p style={{
-          fontSize: '2.8rem', fontWeight: 800, lineHeight: 1,
+          fontSize: '1.5rem', fontWeight: 800, lineHeight: 1,
           background: 'linear-gradient(to bottom right, #FFFFFF, #93C5FD)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-          filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.3))'
         }}>
-          {clima.temperatura_media.replace('°C', '°')}
+          {clima.temperatura_media}
         </p>
-        <p className="mt-1.5 text-[0.8rem] font-semibold" style={{ color: '#DBEAFE', lineHeight: 1.2 }}>
+        <p className="text-[0.7rem] font-medium mt-0.5" style={{ color: '#BFDBFE' }}>
           {clima.condicao}
         </p>
       </div>
 
-      <div style={{ width: '100%', height: 1, background: 'linear-gradient(to right, transparent, rgba(147,197,253,0.3), transparent)' }} />
+      <div style={{ width: 1, height: 36, background: 'rgba(147,197,253,0.25)', margin: '0 4px' }} />
 
-      <div className="text-center">
-        <p className="text-[0.6rem] font-bold uppercase tracking-[0.15em] mb-1"
-          style={{ color: '#93C5FD' }}>
-          Melhor época
+      <div>
+        <p className="text-[0.55rem] font-bold uppercase tracking-[0.15em]" style={{ color: '#93C5FD' }}>
+          Época
         </p>
         <p className="text-[0.7rem] font-medium leading-tight" style={{ color: '#F8FAFC' }}>
           {clima.melhor_epoca}
@@ -117,7 +109,7 @@ function DestaquesWidget({ destaques }: { destaques: string[] }) {
           color: expanded ? '#FDE68A' : '#F2EEE8'
         }}
       >
-        <span className="text-sm font-bold tracking-[0.1em] uppercase">
+        <span className="text-sm font-bold tracking-widest uppercase">
           Destaques
         </span>
         <span className="text-[0.6rem] transition-transform duration-300" style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)' }}>
@@ -243,7 +235,7 @@ export function GuideHeader({ guide, onReset, onAdapt, isAdapting, adaptMessage 
                         <button
                           onClick={handleAdapt}
                           disabled={!adaptValue.trim() || isAdapting}
-                          className="btn-primary text-xs px-5 py-2 disabled:opacity-30 flex-shrink-0"
+                          className="btn-primary text-xs px-5 py-2 disabled:opacity-30 shrink-0"
                         >
                           {isAdapting ? adaptMessage : 'Ir →'}
                         </button>
@@ -320,7 +312,7 @@ export function GuideHeader({ guide, onReset, onAdapt, isAdapting, adaptMessage 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
-          className="relative p-6 md:p-8 rounded-[2rem] overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left group"
+          className="relative p-6 md:p-8 rounded-4xl overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left group"
           style={{
             background: 'linear-gradient(145deg, var(--color-bg-card) 0%, var(--color-bg-soft) 100%)',
             border: '1px solid var(--color-yellow-border)',
@@ -331,7 +323,7 @@ export function GuideHeader({ guide, onReset, onAdapt, isAdapting, adaptMessage 
           <div className="absolute -top-32 -left-32 w-64 h-64 rounded-full blur-[100px] transition-transform duration-700 group-hover:scale-125" style={{ background: 'var(--color-yellow)', opacity: 0.12 }} />
           <div className="absolute -bottom-32 -right-32 w-64 h-64 rounded-full blur-[100px] transition-transform duration-700 group-hover:scale-125" style={{ background: 'var(--color-yellow)', opacity: 0.08 }} />
 
-          <div className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center text-3xl flex-shrink-0 relative z-10"
+          <div className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center text-3xl shrink-0 relative z-10"
             style={{
               background: 'linear-gradient(135deg, var(--color-yellow) 0%, var(--color-yellow-dim) 100%)',
               color: '#161513',

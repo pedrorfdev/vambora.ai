@@ -2,15 +2,28 @@
 // usePexelsImage.ts
 // Busca uma imagem no Pexels pela query.
 // Cache em memória pra não repetir chamadas.
-// Fallback: gradiente escuro se falhar.
+// Fallback: Unsplash estático se Pexels falhar.
 // ─────────────────────────────────────────────
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const cache = new Map<string, string>()
 
-// Gradiente fallback por destino — pra nunca ficar vazio
-const FALLBACK = 'linear-gradient(135deg, #1a1815 0%, #2a2320 50%, #1a1815 100%)'
+// Fallback Unsplash por query — usado quando Pexels não retorna nada
+const UNSPLASH_FALLBACKS: Record<string, string> = {
+  'travel map route': 'https://images.unsplash.com/photo-1506526620579-d5eb31b3ebec?w=400&q=75',
+  'restaurant food table': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&q=75',
+  'concert festival crowd': 'https://images.unsplash.com/photo-1540039155733-d7696d4eb98b?w=400&q=75',
+  'money wallet budget': 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400&q=75',
+  'hotel lobby luxury': 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=400&q=75',
+  'luxury hotel room interior': 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=400&q=75',
+  'cozy apartment living room': 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&q=75',
+  'airplane window sky clouds': 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&q=75',
+  'travel airport departure': 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&q=75',
+}
+
+// Gradiente fallback final — se tudo falhar
+const GRADIENT_FALLBACK = 'linear-gradient(135deg, #1a1815 0%, #2a2320 50%, #1a1815 100%)'
 
 async function fetchPexels(query: string): Promise<string> {
   if (cache.has(query)) return cache.get(query)!
@@ -18,7 +31,7 @@ async function fetchPexels(query: string): Promise<string> {
   const key = import.meta.env.VITE_PEXELS_KEY
   if (!key) throw new Error('VITE_PEXELS_KEY não encontrada')
 
-  // Evitar fotos com pessoas: adicionamos keywords garantidas para paisagens limpas
+  // Evitar fotos com pessoas: keywords garantidas para paisagens limpas
   const finalQuery = `${query} landscape nature empty scenery no people`
 
   const res = await fetch(
@@ -56,20 +69,29 @@ export function usePexelsImage(query: string): UsePexelsImageResult {
 
     fetchPexels(query)
       .then(u => { setUrl(u); setLoading(false) })
-      .catch(() => { setError(true); setLoading(false) })
+      .catch(() => {
+        // Tenta Unsplash como segundo fallback
+        const unsplash = UNSPLASH_FALLBACKS[query]
+        if (unsplash) { setUrl(unsplash); setLoading(false) }
+        else { setError(true); setLoading(false) }
+      })
   }, [query])
 
   return { url, loading, error }
 }
 
-// Utilitário pra imagens estáticas (leque, seções)
-// Retorna URL direto ou string de fallback
+// Utilitário pra imagens estáticas (leque, seções, sidebar)
+// Retorna URL do Pexels, Unsplash como fallback ou gradiente final
 export async function getPexelsUrl(query: string): Promise<string> {
   try {
     return await fetchPexels(query)
   } catch {
-    return FALLBACK
+    // Fallback 1: Unsplash mapeado
+    const unsplash = UNSPLASH_FALLBACKS[query]
+    if (unsplash) return unsplash
+    // Fallback 2: gradiente
+    return GRADIENT_FALLBACK
   }
 }
 
-export { FALLBACK }
+export { GRADIENT_FALLBACK as FALLBACK }

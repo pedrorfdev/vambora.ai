@@ -12,7 +12,7 @@ import { ThemeToggle } from './components/ui/ThemeToggle'
 
 export function App() {
   const guide = useGuide()
-  const { theme, toggle } = useTheme()
+  const { theme, toggle, colorTheme, setColorTheme } = useTheme()
 
   async function handlePromptSubmit(prompt: string) {
     guide.setPrompt(prompt)
@@ -20,11 +20,11 @@ export function App() {
   }
 
   return (
-    <main className="min-h-dvh transition-colors duration-300"
+    <main className="min-h-dvh overflow-x-hidden transition-colors duration-300"
       style={{ backgroundColor: 'var(--color-bg-base)', color: 'var(--color-fg-primary)' }}
     >
-      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-100">
-        <ThemeToggle theme={theme} onToggle={toggle} />
+      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50 scale-[0.85] sm:scale-100 origin-top-right">
+        <ThemeToggle theme={theme} onToggle={toggle} colorTheme={colorTheme} onSelectColor={setColorTheme} />
       </div>
 
       <AnimatePresence mode="wait">

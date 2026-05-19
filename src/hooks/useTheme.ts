@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
-type Theme = 'dark' | 'light'
+export type Theme = 'dark' | 'light'
+export type ColorTheme = 'blue' | 'yellow' | 'green'
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
@@ -8,6 +9,12 @@ export function useTheme() {
     const saved = localStorage.getItem('vambora-theme') as Theme | null
     if (saved) return saved
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+  })
+
+  const [colorTheme, setColorTheme] = useState<ColorTheme>(() => {
+    const saved = localStorage.getItem('vambora-color') as ColorTheme | null
+    if (saved) return saved
+    return 'blue' // Default
   })
 
   useEffect(() => {
@@ -20,7 +27,13 @@ export function useTheme() {
     localStorage.setItem('vambora-theme', theme)
   }, [theme])
 
+  useEffect(() => {
+    const root = document.documentElement
+    root.setAttribute('data-color', colorTheme)
+    localStorage.setItem('vambora-color', colorTheme)
+  }, [colorTheme])
+
   const toggle = () => setTheme(t => t === 'dark' ? 'light' : 'dark')
 
-  return { theme, toggle }
+  return { theme, toggle, colorTheme, setColorTheme }
 }
