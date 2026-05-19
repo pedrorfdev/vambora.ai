@@ -99,20 +99,12 @@ export function LoadingScreen({ message }: LoadingScreenProps) {
           className="relative flex items-center"
           style={{ width: TRACK_W, height: 80 }}
         >
-          {/* Pin A — origem */}
-          <div className="absolute left-0 flex flex-col items-center gap-1" style={{ top: '50%', transform: 'translateY(-60%)' }}>
-            <MapPin color="var(--color-fg-muted)" size={24} />
-            <span style={{ fontSize: '0.6rem', color: 'var(--color-fg-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              origem
-            </span>
-          </div>
-
           {/* Linha pontilhada da trilha */}
           <div
             className="absolute"
             style={{
-              left: 20,
-              right: 20,
+              left: 12,
+              right: 12,
               top: '50%',
               transform: 'translateY(-50%)',
               height: 2,
@@ -140,29 +132,52 @@ export function LoadingScreen({ message }: LoadingScreenProps) {
             />
           </div>
 
-          {/* Avião animado */}
+          {/* Pin Animado (Origem -> Destino) */}
           <motion.div
-            className="absolute flex items-center justify-center"
+            className="absolute flex flex-col items-center gap-1 z-10"
             style={{
-              left: 12 + (planeX * (TRACK_W - 40) / TRACK_W),
+              left: (progress / 100) * (TRACK_W - 24),
               top: '50%',
-              transform: 'translateY(-50%)',
+              transform: 'translateY(-60%)',
               transition: 'left 0.2s linear',
-              filter: 'drop-shadow(0 0 6px rgba(232,184,75,0.5))',
             }}
           >
-            {/* Glow no avião */}
+            {/* Glow crescendo com o progresso */}
             <motion.div
               className="absolute rounded-full"
-              style={{ width: 32, height: 32, background: 'var(--color-yellow-glow)', filter: 'blur(8px)' }}
-              animate={{ scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
+              style={{ 
+                width: 32, height: 32, top: 4,
+                background: 'var(--color-yellow-glow)', 
+                filter: 'blur(8px)',
+                opacity: progress / 100 
+              }}
             />
-            <WalkIcon size={20} />
+            
+            <div className="relative" style={{ width: 24, height: 24 + 8 }}>
+              {/* Pin Apagado */}
+              <div className="absolute inset-0 transition-opacity duration-200" style={{ opacity: 1 - (progress / 100) }}>
+                 <MapPin color="var(--color-fg-muted)" size={24} />
+              </div>
+              {/* Pin Aceso */}
+              <div className="absolute inset-0 transition-opacity duration-200" style={{ opacity: progress / 100 }}>
+                 <MapPin color="var(--color-yellow)" size={24} />
+              </div>
+            </div>
+
+            {/* Label de Origem (Some gradativamente) */}
+            <span style={{ 
+              position: 'absolute', top: '100%', marginTop: 4,
+              fontSize: '0.6rem', color: 'var(--color-fg-muted)', 
+              letterSpacing: '0.1em', textTransform: 'uppercase',
+              opacity: Math.max(0, 1 - (progress / 30)), // some no primeiro terço do caminho
+              transition: 'opacity 0.2s linear'
+            }}>
+              origem
+            </span>
           </motion.div>
 
-          {/* Pin B — destino */}
-          <div className="absolute right-0 flex flex-col items-center gap-1" style={{ top: '50%', transform: 'translateY(-60%)' }}>
+          {/* Pin B — destino (esperando aceso) */}
+          <div className="absolute right-0 flex flex-col items-center gap-1 z-0" style={{ top: '50%', transform: 'translateY(-60%)' }}>
             <MapPin color="var(--color-yellow)" size={24} pulsing={progress > 80} />
             <span style={{ fontSize: '0.6rem', color: 'var(--color-yellow)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               destino

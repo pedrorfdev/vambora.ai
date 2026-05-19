@@ -181,7 +181,7 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
       </div>
 
       <motion.div
-        className="relative flex flex-col items-center gap-6 px-4 sm:px-6 pt-12 sm:pt-0 text-center w-full"
+        className="relative flex flex-col items-center gap-6 px-4 sm:px-6 pt-24 sm:pt-0 text-center w-full"
         style={{ zIndex: 2, paddingBottom: '240px' }}
         animate={isCollapsing ? { opacity: 0, scale: 0.96, transition: { duration: 0.3, delay: 0.2 } } : { opacity: 1, scale: 1 }}
       >
