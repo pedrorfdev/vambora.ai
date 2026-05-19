@@ -124,8 +124,8 @@ export function EventsExpanded({ guide }: { guide: Guide }) {
           }}
         >
           {/* Data em cima */}
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs font-bold px-3 py-1.5 rounded-full"
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
+            <span className="self-start sm:self-auto text-xs font-bold px-3 py-1.5 rounded-full"
               style={{ background: 'var(--color-amber-glow)', border: '1px solid var(--color-amber-border)', color: 'var(--color-amber)' }}>
               📅 {ev.data}
             </span>

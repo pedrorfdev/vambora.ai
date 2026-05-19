@@ -203,7 +203,7 @@ export function AboutSection({ onDestinationSelect }: AboutSectionProps) {
   const isInView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section className="py-24 md:py-32 overflow-hidden bg-[var(--color-bg-base)]">
+    <section className="py-24 md:py-32 overflow-hidden bg-(--color-bg-base)">
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center" ref={ref}>
 
@@ -213,48 +213,48 @@ export function AboutSection({ onDestinationSelect }: AboutSectionProps) {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-xs font-bold uppercase tracking-widest mb-4 block text-[var(--color-yellow)]">
+            <span className="text-xs font-bold uppercase tracking-widest mb-4 block text-yellow">
               sobre o vambora
             </span>
-            <h2 className="text-[clamp(2rem,4vw,3rem)] text-[var(--color-fg-primary)] leading-[1.2] font-extrabold tracking-[-0.02em]">
+            <h2 className="text-[clamp(2rem,4vw,3rem)] text-(--color-fg-primary) leading-[1.2] font-extrabold tracking-[-0.02em]">
               Um guia que conhece o Brasil de verdade.
             </h2>
-            <p className="mt-6 text-base md:text-lg leading-relaxed text-[var(--color-fg-secondary)] max-w-[440px]">
+            <p className="mt-6 text-base md:text-lg leading-relaxed text-(--color-fg-secondary) max-w-[440px]">
               Não é uma lista genérica. É um roteiro feito pra você — com eventos reais,
               preços honestos e dicas que só quem foi sabe.
             </p>
-            <p className="mt-4 text-sm leading-relaxed text-[var(--color-fg-muted)] max-w-[380px]">
+            <p className="mt-4 text-sm leading-relaxed text-(--color-fg-muted) max-w-[380px]">
               Clique em qualquer destino no mapa para gerar um guia completo na hora.
             </p>
 
             {/* Legenda */}
             <div className="mt-8 flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full shrink-0 bg-[var(--color-yellow)] shadow-[0_0_8px_var(--color-yellow)]" />
-                <span className="text-xs text-[var(--color-fg-muted)]">
+                <div className="w-3 h-3 rounded-full shrink-0 bg-yellow shadow-[0_0_8px_var(--color-yellow)]" />
+                <span className="text-xs text-(--color-fg-muted)">
                   Destino popular — clique para gerar o guia
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full shrink-0 bg-[rgba(0,168,120,0.3)] border border-[var(--color-yellow)]" />
-                <span className="text-xs text-[var(--color-fg-muted)]">
+                <div className="w-3 h-3 rounded-full shrink-0 bg-[rgba(0,168,120,0.3)] border border-yellow" />
+                <span className="text-xs text-(--color-fg-muted)">
                   Destino animado — mais visitado
                 </span>
               </div>
             </div>
 
             {/* Stats */}
-            <div className="mt-10 grid grid-cols-3 gap-4">
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { value: '27', label: 'Estados', suffix: '' },
                 { value: '5.569', label: 'Municípios', suffix: '' },
                 { value: '30', label: 'Segundos', suffix: 's' },
               ].map(s => (
-                <div key={s.label} className="flex flex-col gap-1 p-4 rounded-2xl bg-[var(--color-bg-card)] border border-[var(--color-bg-border)]">
-                  <p className="text-2xl font-bold leading-none text-[var(--color-yellow)]">
+                <div key={s.label} className="flex flex-col gap-1 p-4 rounded-2xl bg-(--color-bg-card) border border-(--color-bg-border)">
+                  <p className="text-2xl font-bold leading-none text-yellow">
                     {s.value}<span className="text-[0.7em] opacity-60">{s.suffix}</span>
                   </p>
-                  <p className="text-xs text-[var(--color-fg-muted)]">{s.label}</p>
+                  <p className="text-xs text-(--color-fg-muted)">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -265,7 +265,7 @@ export function AboutSection({ onDestinationSelect }: AboutSectionProps) {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full rounded-3xl overflow-hidden bg-[var(--color-bg-card)] border border-[var(--color-bg-border)] shadow-[var(--shadow-card)] aspect-[400/440]"
+            className="relative w-full rounded-3xl overflow-hidden bg-(--color-bg-card) border border-(--color-bg-border) shadow-(--shadow-card) aspect-400/440"
           >
             <MapSVG
               destinations={DESTINATIONS}

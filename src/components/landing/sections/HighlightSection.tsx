@@ -2,8 +2,17 @@
 // HighlightSection.tsx — Card grande com brilho
 // ─────────────────────────────────────────────
 
-import { useRef } from 'react'
-import { motion, useInView } from 'motion/react'
+import { motion, useInView } from 'motion/react';
+import { useRef, useState } from 'react';
+import { usePexelsImage } from '../../../hooks/usePexelsImage';
+
+const HIGHLIGHTS = [
+  { name: 'Florianópolis, SC', pexels: 'Florianópolis praias Brasil', desc: '42 praias · Lagoa da Conceição · gastronomia açoriana' },
+  { name: 'Rio de Janeiro, RJ', pexels: 'Rio de Janeiro Copacabana Cristo Redentor', desc: 'Cristo Redentor · Praia de Copacabana · Pão de Açúcar' },
+  { name: 'Gramado, RS', pexels: 'Gramado Rio Grande do Sul arquitetura', desc: 'Arquitetura europeia · Fondues · Clima de montanha' },
+  { name: 'Salvador, BA', pexels: 'Salvador Bahia Pelourinho', desc: 'Pelourinho · Cultura afro-brasileira · Praias' },
+  { name: 'Fernando de Noronha, PE', pexels: 'Fernando de Noronha praias', desc: 'Baía do Sancho · Vida marinha · Paraíso ecológico' },
+]
 
 function Particle({ x, y, delay }: { x: string; y: string; delay: number }) {
   return (
@@ -34,6 +43,8 @@ const FEATURES = [
 export function HighlightSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [current] = useState(() => HIGHLIGHTS[Math.floor(Math.random() * HIGHLIGHTS.length)])
+  const { url: bgUrl } = usePexelsImage(current.pexels)
 
   return (
     <section className="py-28" style={{ background: 'var(--color-bg-base)' }}>
@@ -63,8 +74,8 @@ export function HighlightSection() {
               }}
             >
               <img
-                src="https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?w=700&q=85"
-                alt="Florianópolis"
+                src={bgUrl || "https://images.unsplash.com/photo-1579883584852-6b96e42b2023?w=700&q=85"}
+                alt={current.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -85,12 +96,12 @@ export function HighlightSection() {
               />
 
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <span className="badge-yellow text-xs mb-3 inline-block">✦ destino em destaque</span>
-                <h3 className="text-serif text-2xl font-normal" style={{ color: 'var(--color-text-primary)' }}>
-                  Florianópolis, SC
+                <span className="badge-yellow text-xs mb-3 inline-block text-white">✦ destino em destaque</span>
+                <h3 className="text-serif text-2xl font-bold text-white">
+                  {current.name}
                 </h3>
-                <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>
-                  42 praias · Lagoa da Conceição · gastronomia açoriana
+                <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                  {current.desc}
                 </p>
               </div>
             </div>

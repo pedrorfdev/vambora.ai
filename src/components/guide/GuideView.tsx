@@ -1,4 +1,4 @@
-import { CalendarDays, Cloud, CloudRain, CloudSun, Hotel, Map, Sun, Utensils, Wallet, Wind, Menu, Info, X } from 'lucide-react'
+import { CalendarDays, Cloud, CloudRain, CloudSun, Hotel, Info, Map, Menu, Sparkles, Sun, Utensils, Wallet, Wand2, Wind, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { getPexelsUrl, usePexelsImage } from '../../hooks/usePexelsImage'
@@ -130,7 +130,7 @@ function SidebarBlock({ id, guide, isActive, onClick }: {
   )
 }
 
-function Sidebar({ guide, activePanel, onPanelChange, onReset, onAdapt, isAdapting, adaptMessage }: {
+function Sidebar({ guide, activePanel, onPanelChange, onReset, onAdapt, isAdapting, adaptMessage, onOpenDica }: {
   guide: Guide
   activePanel: PanelId
   onPanelChange: (id: PanelId) => void
@@ -138,6 +138,7 @@ function Sidebar({ guide, activePanel, onPanelChange, onReset, onAdapt, isAdapti
   onAdapt: (v: string) => Promise<void>
   isAdapting: boolean
   adaptMessage: string
+  onOpenDica: () => void
 }) {
   const [adaptOpen, setAdaptOpen] = useState(false)
   const [adaptValue, setAdaptValue] = useState('')
@@ -163,16 +164,18 @@ function Sidebar({ guide, activePanel, onPanelChange, onReset, onAdapt, isAdapti
         <div className="flex gap-2 mb-3">
           <button onClick={onReset}
             disabled={isAdapting}
-            className="flex-1 text-xs font-semibold py-2 px-3 rounded-xl transition-all duration-200 disabled:opacity-30"
+            className="hidden sm:block flex-1 text-xs font-semibold py-2 px-3 rounded-xl transition-all duration-200 disabled:opacity-30"
             style={{ background: 'var(--color-bg-soft)', border: '1px solid var(--color-bg-border)', color: 'var(--color-fg-secondary)' }}
             onMouseEnter={e => { if (!isAdapting) { e.currentTarget.style.color = 'var(--color-fg-primary)'; e.currentTarget.style.borderColor = 'var(--color-yellow-border)' } }}
             onMouseLeave={e => { if (!isAdapting) { e.currentTarget.style.color = 'var(--color-fg-secondary)'; e.currentTarget.style.borderColor = 'var(--color-bg-border)' } }}
           >
             ← Nova busca
           </button>
+
+          {/* Botão de Adaptar (Apenas Desktop) */}
           <button onClick={() => setAdaptOpen(v => !v)}
             disabled={isAdapting}
-            className="flex-1 text-xs font-semibold py-2 px-3 rounded-xl transition-all duration-200 disabled:opacity-50"
+            className="hidden sm:block flex-1 text-xs font-semibold py-2 px-3 rounded-xl transition-all duration-200 disabled:opacity-50"
             style={{
               background: isAdapting ? 'var(--color-yellow-glow)' : adaptOpen ? 'var(--color-yellow-glow)' : 'var(--color-bg-soft)',
               border: isAdapting ? '1px solid var(--color-yellow-border)' : adaptOpen ? '1px solid var(--color-yellow-border)' : '1px solid var(--color-bg-border)',
@@ -180,6 +183,18 @@ function Sidebar({ guide, activePanel, onPanelChange, onReset, onAdapt, isAdapti
             }}
           >
             {isAdapting ? '✦ Adaptando...' : '✦ Adaptar'}
+          </button>
+
+          {/* Botão de Dica Golden (Apenas Mobile) */}
+          <button onClick={onOpenDica}
+            className="sm:hidden flex-1 text-xs font-semibold py-2 px-3 rounded-xl transition-all duration-200"
+            style={{
+              background: 'var(--color-yellow-glow)',
+              border: '1px solid var(--color-yellow-border)',
+              color: 'var(--color-yellow)',
+            }}
+          >
+            ✦ Vai uma dica.ai?
           </button>
         </div>
 
@@ -209,7 +224,7 @@ function Sidebar({ guide, activePanel, onPanelChange, onReset, onAdapt, isAdapti
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="overflow-hidden"
+              className="overflow-hidden hidden sm:block"
             >
               <div className="flex gap-2 mb-3">
                 <textarea
@@ -314,8 +329,7 @@ function DestinationTitle({ destino, compact }: { destino: Guide['destino']; com
   )
 }
 
-function CenterPanel({ guide, activePanel }: { guide: Guide; activePanel: PanelId }) {
-  const [dicaModalOpen, setDicaModalOpen] = useState(false)
+function CenterPanel({ guide, activePanel, dicaModalOpen, setDicaModalOpen, setAdaptModalOpen }: { guide: Guide; activePanel: PanelId; dicaModalOpen: boolean; setDicaModalOpen: (v: boolean) => void; setAdaptModalOpen: (v: boolean) => void }) {
   return (
     <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
       {/* Conteúdo do painel ativo — scrollável */}
@@ -384,50 +398,52 @@ function CenterPanel({ guide, activePanel }: { guide: Guide; activePanel: PanelI
         </AnimatePresence>
       </div>
 
-      {/* Dica — sempre visível no rodapé do painel central no desktop, modal no mobile */}
-      <div className="shrink-0 px-3 pb-3 pt-2" style={{ borderTop: activePanel ? '1px solid var(--color-bg-border)' : 'none' }}>
-        <div className="hidden sm:block">
-          <motion.div
-            layout
-            className="w-full flex items-start gap-3 p-3 rounded-2xl"
-            style={{ background: 'var(--color-yellow-glow)', border: '1px solid var(--color-yellow-border)' }}
-          >
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-sm"
-              style={{ background: 'var(--color-yellow-glow)', border: '1px solid var(--color-yellow-border)' }}>
-              🌟
-            </div>
-            <div className="flex-1 min-w-0">
-              <span className="text-[0.6rem] font-bold uppercase tracking-widest block mb-0.5" style={{ color: 'var(--color-yellow)' }}>
-                ✦ Dica Golden
-              </span>
-              <p className="text-xs font-medium leading-relaxed"
-                style={{ color: 'var(--color-fg-primary)' }}>
-                {guide.dica_golden}
-              </p>
-              {guide.clima.dica && (
-                <p className="mt-1.5 text-[0.7rem] leading-relaxed" style={{ color: 'var(--color-fg-secondary)', fontStyle: 'italic' }}>
-                  🌤 {guide.clima.dica}
-                </p>
-              )}
-            </div>
-          </motion.div>
-        </div>
-        <div className="sm:hidden flex items-center justify-center">
-          <button onClick={() => setDicaModalOpen(true)} className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-lg transition-transform hover:scale-105"
+      {/* Dica — sempre visível no rodapé do painel central no desktop, botão flutuante no mobile */}
+      <div className="hidden sm:block shrink-0 px-3 pb-3 pt-2" style={{ borderTop: activePanel ? '1px solid var(--color-bg-border)' : 'none' }}>
+        <motion.div
+          layout
+          className="w-full flex items-start gap-3 p-3 rounded-2xl"
+          style={{ background: 'var(--color-yellow-glow)', border: '1px solid var(--color-yellow-border)' }}
+        >
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
             style={{ background: 'var(--color-yellow-glow)', border: '1px solid var(--color-yellow-border)' }}>
-            🌟
-          </button>
-        </div>
+            <Sparkles size={14} color="var(--color-yellow)" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <span className="text-[0.6rem] font-bold uppercase tracking-widest block mb-0.5" style={{ color: 'var(--color-yellow)' }}>
+              ✦ Vai uma dica.ai?
+            </span>
+            <p className="text-xs font-medium leading-relaxed"
+              style={{ color: 'var(--color-fg-primary)' }}>
+              {guide.dica_golden}
+            </p>
+            {guide.clima.dica && (
+              <p className="mt-1.5 text-[0.7rem] leading-relaxed" style={{ color: 'var(--color-fg-secondary)', fontStyle: 'italic' }}>
+                🌤 {guide.clima.dica}
+              </p>
+            )}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Botão flutuante mobile de Adaptar */}
+      <div className="sm:hidden fixed bottom-4 right-4 z-20">
+        <button onClick={() => setAdaptModalOpen(true)} className="w-12 h-12 rounded-full flex items-center justify-center shadow-[var(--shadow-yellow)] transition-transform hover:scale-105"
+          style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-yellow-border)' }}>
+          <Wand2 size={20} color="var(--color-yellow)" />
+        </button>
       </div>
 
       <AnimatePresence>
         {dicaModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDicaModalOpen(false)} className="absolute inset-0 backdrop-blur-md" style={{ background: 'rgba(0,0,0,0.6)' }} />
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative w-full max-w-sm rounded-3xl p-5" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-yellow-border)', boxShadow: 'var(--shadow-yellow)' }}>
-              <button onClick={() => setDicaModalOpen(false)} className="absolute top-4 right-4 p-1"><X size={20} color="var(--color-fg-muted)"/></button>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl mb-3" style={{ background: 'var(--color-yellow-glow)', border: '1px solid var(--color-yellow-border)' }}>🌟</div>
-              <span className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: 'var(--color-yellow)' }}>✦ Dica Golden</span>
+              <button onClick={() => setDicaModalOpen(false)} className="absolute top-4 right-4 p-1"><X size={20} color="var(--color-fg-muted)" /></button>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: 'var(--color-yellow-glow)', border: '1px solid var(--color-yellow-border)' }}>
+                <Sparkles size={18} color="var(--color-yellow)" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: 'var(--color-yellow)' }}>✦ Vai uma dica.ai?</span>
               <p className="text-sm font-medium leading-relaxed mb-3" style={{ color: 'var(--color-fg-primary)' }}>{guide.dica_golden}</p>
               {guide.clima.dica && <p className="text-xs leading-relaxed" style={{ color: 'var(--color-fg-secondary)', fontStyle: 'italic' }}>🌤 {guide.clima.dica}</p>}
             </motion.div>
@@ -443,6 +459,16 @@ export function GuideView({ guide, onReset, onAdapt, isAdapting, adaptMessage }:
   const { url: bgUrl } = usePexelsImage(guide.destino.unsplash_query)
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false)
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false)
+  const [adaptModalOpen, setAdaptModalOpen] = useState(false)
+  const [adaptValueMobile, setAdaptValueMobile] = useState('')
+  const [dicaModalOpen, setDicaModalOpen] = useState(false)
+
+  function handleAdaptMobile() {
+    if (!adaptValueMobile.trim() || isAdapting) return
+    onAdapt(adaptValueMobile.trim())
+    setAdaptValueMobile('')
+    setAdaptModalOpen(false)
+  }
 
   useEffect(() => { setActivePanel(null) }, [guide])
 
@@ -474,11 +500,11 @@ export function GuideView({ guide, onReset, onAdapt, isAdapting, adaptMessage }:
 
       {/* Mobile Header */}
       <div className="relative lg:hidden flex items-center justify-between px-5 py-4 z-30" style={{ background: 'var(--color-bg-base)', borderBottom: '1px solid var(--color-bg-border)' }}>
-        <button onClick={() => setLeftDrawerOpen(true)} className="p-2 rounded-xl bg-[var(--color-bg-soft)] text-[var(--color-fg-primary)] shadow-sm">
+        <button onClick={() => setLeftDrawerOpen(true)} className="p-2 rounded-xl bg-(--color-bg-soft) text-(--color-fg-primary) shadow-sm">
           <Menu size={20} />
         </button>
-        <span className="font-bold text-[var(--color-fg-primary)] text-sm tracking-wide truncate max-w-[180px]">{guide.destino.nome}</span>
-        <button onClick={() => setRightDrawerOpen(true)} className="p-2 rounded-xl bg-[var(--color-bg-soft)] text-[var(--color-fg-primary)] shadow-sm">
+        <span className="font-bold text-(--color-fg-primary) text-sm tracking-wide truncate max-w-[180px]">{guide.destino.nome}</span>
+        <button onClick={() => setRightDrawerOpen(true)} className="p-2 rounded-xl bg-(--color-bg-soft) text-(--color-fg-primary) shadow-sm">
           <Info size={20} />
         </button>
       </div>
@@ -500,7 +526,7 @@ export function GuideView({ guide, onReset, onAdapt, isAdapting, adaptMessage }:
         style={{ '--grid-cols': activePanel ? '340px 1fr 420px' : '340px 1fr 0px' } as React.CSSProperties}>
 
         {/* Sidebar / Left Drawer */}
-        <div className={`fixed inset-y-0 left-0 w-[320px] max-w-[85vw] p-4 lg:p-0 bg-[var(--color-bg-base)] lg:bg-transparent z-50 transform transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:z-auto lg:w-auto ${leftDrawerOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className={`fixed inset-y-0 left-0 w-[320px] max-w-[85vw] p-4 lg:p-0 bg-(--color-bg-base) lg:bg-transparent z-50 transform transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:z-auto lg:w-auto ${leftDrawerOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <Sidebar
             guide={guide}
             activePanel={activePanel}
@@ -509,15 +535,16 @@ export function GuideView({ guide, onReset, onAdapt, isAdapting, adaptMessage }:
             onAdapt={onAdapt}
             isAdapting={isAdapting}
             adaptMessage={adaptMessage}
+            onOpenDica={() => setDicaModalOpen(true)}
           />
         </div>
 
-        <CenterPanel guide={guide} activePanel={activePanel} />
+        <CenterPanel guide={guide} activePanel={activePanel} dicaModalOpen={dicaModalOpen} setDicaModalOpen={setDicaModalOpen} setAdaptModalOpen={setAdaptModalOpen} />
 
         {/* Right Column / Right Drawer */}
-        <div className={`fixed inset-y-0 right-0 w-[320px] max-w-[85vw] bg-[var(--color-bg-base)] lg:bg-transparent z-50 transform transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:z-auto lg:w-auto overflow-y-auto lg:overflow-visible lg:pt-16 ${rightDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className={`fixed inset-y-0 right-0 w-[320px] max-w-[85vw] bg-(--color-bg-base) lg:bg-transparent z-50 transform transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:z-auto lg:w-auto overflow-y-auto lg:overflow-visible lg:pt-16 ${rightDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="lg:hidden p-4 flex justify-end">
-            <button onClick={() => setRightDrawerOpen(false)} className="p-2 rounded-lg bg-[var(--color-bg-soft)]"><X size={20} color="var(--color-fg-primary)"/></button>
+            <button onClick={() => setRightDrawerOpen(false)} className="p-2 rounded-lg bg-(--color-bg-soft)"><X size={20} color="var(--color-fg-primary)" /></button>
           </div>
           <DestinationTitle destino={guide.destino} compact={activePanel !== null} />
         </div>
@@ -551,6 +578,36 @@ export function GuideView({ guide, onReset, onAdapt, isAdapting, adaptMessage }:
           ✈ Nova viagem
         </button>
       </div>
+
+      <AnimatePresence>
+        {adaptModalOpen && (
+          <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setAdaptModalOpen(false)} className="absolute inset-0 backdrop-blur-md" style={{ background: 'rgba(0,0,0,0.6)' }} />
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative w-full max-w-sm rounded-3xl p-5" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-yellow-border)', boxShadow: 'var(--shadow-yellow)' }}>
+              <button onClick={() => setAdaptModalOpen(false)} className="absolute top-4 right-4 p-1"><X size={20} color="var(--color-fg-muted)" /></button>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ background: 'var(--color-yellow-glow)', border: '1px solid var(--color-yellow-border)' }}>
+                <Wand2 size={18} color="var(--color-yellow)" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: 'var(--color-yellow)' }}>✦ Adaptar Roteiro</span>
+
+              <textarea
+                value={adaptValueMobile}
+                onChange={e => setAdaptValueMobile(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleAdaptMobile() } }}
+                placeholder="Ex: Troque os restaurantes caros..."
+                rows={3}
+                autoFocus
+                className="w-full text-sm bg-transparent resize-none outline-none leading-relaxed p-3 rounded-xl mb-4"
+                style={{ color: 'var(--color-fg-primary)', border: '1px solid var(--color-bg-border)', background: 'var(--color-bg-soft)', caretColor: 'var(--color-yellow)' }}
+              />
+              <button onClick={handleAdaptMobile} disabled={!adaptValueMobile.trim() || isAdapting}
+                className="btn-primary w-full py-2.5 disabled:opacity-30">
+                {isAdapting ? 'Adaptando...' : 'Adaptar Guia'}
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }

@@ -207,10 +207,10 @@ export function HeroSection({ onSubmit, error }: HeroSectionProps) {
               className="w-full bg-transparent resize-none outline-none leading-relaxed px-6 pt-5 pb-3 placeholder:text-text-muted"
               style={{ color: 'var(--color-fg-primary)', fontSize: '0.9375rem', caretColor: 'var(--color-yellow)', fontFamily: 'var(--font-sans)' }}
             />
-            <div className="px-4 sm:px-6 pb-3 flex overflow-x-auto sm:flex-wrap gap-2 scrollbar-hide [scrollbar-width:none]">
+            <div className="px-4 sm:px-6 pb-3 flex flex-col sm:flex-row sm:flex-wrap gap-2">
               {QUICK_PROMPTS.map(ex => (
                 <button key={ex} onClick={() => { setPrompt(ex); textareaRef.current?.focus() }}
-                  className="text-xs px-3 py-1.5 rounded-full whitespace-nowrap transition-colors"
+                  className="text-xs px-3 py-2 sm:py-1.5 rounded-xl sm:rounded-full whitespace-normal sm:whitespace-nowrap text-left sm:text-center transition-colors"
                   style={{ background: 'var(--color-bg-soft)', border: '1px solid var(--color-bg-border)', color: 'var(--color-fg-secondary)' }}
                   onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--color-yellow-border)'; e.currentTarget.style.color = 'var(--color-yellow)'; e.currentTarget.style.background = 'var(--color-yellow-glow)' }}
                   onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--color-bg-border)'; e.currentTarget.style.color = 'var(--color-fg-secondary)'; e.currentTarget.style.background = 'var(--color-bg-soft)' }}

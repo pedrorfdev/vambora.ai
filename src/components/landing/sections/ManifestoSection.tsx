@@ -10,7 +10,7 @@ import { motion, useInView } from 'motion/react'
 const STATS = [
   { value: '27', label: 'estados mapeados', suffix: '' },
   { value: '30', label: 'segundos pra um roteiro', suffix: 's' },
-  { value: '100', label: 'gratuito pra sempre', suffix: '%' },
+  { value: 'I.A.', label: 'curadoria premium', suffix: '' },
 ]
 
 const LINES = [
@@ -91,7 +91,7 @@ export function ManifestoSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="grid grid-cols-3 gap-6 mb-16 max-w-2xl mx-auto"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16 max-w-2xl mx-auto"
         >
           {STATS.map((stat, i) => (
             <motion.div
