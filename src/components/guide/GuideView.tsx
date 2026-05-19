@@ -428,7 +428,7 @@ function CenterPanel({ guide, activePanel, dicaModalOpen, setDicaModalOpen, setA
 
       {/* Botão flutuante mobile de Adaptar */}
       <div className="sm:hidden fixed bottom-4 right-4 z-20">
-        <button onClick={() => setAdaptModalOpen(true)} className="w-12 h-12 rounded-full flex items-center justify-center shadow-[var(--shadow-yellow)] transition-transform hover:scale-105"
+        <button onClick={() => setAdaptModalOpen(true)} className="w-12 h-12 rounded-full flex items-center justify-center shadow-(--shadow-yellow) transition-transform hover:scale-105"
           style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-yellow-border)' }}>
           <Wand2 size={20} color="var(--color-yellow)" />
         </button>

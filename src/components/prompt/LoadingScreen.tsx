@@ -6,8 +6,8 @@
 // a IA processa. Micro-textos rotativos embaixo.
 // ─────────────────────────────────────────────
 
+import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
 
 interface LoadingScreenProps {
   message: string
@@ -49,15 +49,6 @@ function MapPin({ color = 'var(--color-yellow)', size = 28, pulsing = false }: {
   )
 }
 
-// Bonequinho caminhando (SVG path customizado)
-function WalkIcon({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="var(--color-yellow)">
-      <path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"/>
-    </svg>
-  )
-}
-
 export function LoadingScreen({ message }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0)
 
@@ -75,7 +66,6 @@ export function LoadingScreen({ message }: LoadingScreenProps) {
 
   // Largura da trilha em px (usada pros cálculos de posição)
   const TRACK_W = 320
-  const planeX = (progress / 100) * TRACK_W
 
   return (
     <motion.div
@@ -145,29 +135,29 @@ export function LoadingScreen({ message }: LoadingScreenProps) {
             {/* Glow crescendo com o progresso */}
             <motion.div
               className="absolute rounded-full"
-              style={{ 
+              style={{
                 width: 32, height: 32, top: 4,
-                background: 'var(--color-yellow-glow)', 
+                background: 'var(--color-yellow-glow)',
                 filter: 'blur(8px)',
-                opacity: progress / 100 
+                opacity: progress / 100
               }}
             />
-            
+
             <div className="relative" style={{ width: 24, height: 24 + 8 }}>
               {/* Pin Apagado */}
               <div className="absolute inset-0 transition-opacity duration-200" style={{ opacity: 1 - (progress / 100) }}>
-                 <MapPin color="var(--color-fg-muted)" size={24} />
+                <MapPin color="var(--color-fg-muted)" size={24} />
               </div>
               {/* Pin Aceso */}
               <div className="absolute inset-0 transition-opacity duration-200" style={{ opacity: progress / 100 }}>
-                 <MapPin color="var(--color-yellow)" size={24} />
+                <MapPin color="var(--color-yellow)" size={24} />
               </div>
             </div>
 
             {/* Label de Origem (Some gradativamente) */}
-            <span style={{ 
+            <span style={{
               position: 'absolute', top: '100%', marginTop: 4,
-              fontSize: '0.6rem', color: 'var(--color-fg-muted)', 
+              fontSize: '0.6rem', color: 'var(--color-fg-muted)',
               letterSpacing: '0.1em', textTransform: 'uppercase',
               opacity: Math.max(0, 1 - (progress / 30)), // some no primeiro terço do caminho
               transition: 'opacity 0.2s linear'
