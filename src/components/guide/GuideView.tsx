@@ -251,7 +251,7 @@ function Sidebar({ guide, activePanel, onPanelChange, onReset, onAdapt, isAdapti
           <span style={{ color: 'var(--color-yellow)', fontWeight: 700 }}>{guide.destino.nome}</span>
         </p>
 
-        {/* Período / duração / viajantes — empilhados */}
+        {/* Período / duração / viajantes — empilhados com suporte a quebra no mobile */}
         <div className="flex flex-col gap-1.5">
           {[
             { label: 'Período', value: `de ${periodo.data_inicio} até ${periodo.data_fim}` },
@@ -259,12 +259,12 @@ function Sidebar({ guide, activePanel, onPanelChange, onReset, onAdapt, isAdapti
             { label: 'Viajantes', value: `${periodo.total_pessoas} pessoa${periodo.total_pessoas > 1 ? 's' : ''}` },
           ].map(row => (
             <div key={row.label}
-              className="flex items-center justify-between px-3 py-2 rounded-xl"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between items-start gap-1 sm:gap-4 px-3 py-2 rounded-xl"
               style={{ background: 'var(--color-bg-soft)', border: '1px solid var(--color-bg-border)' }}>
               <span style={{ fontSize: '0.65rem', color: 'var(--color-fg-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                 {row.label}
               </span>
-              <span className="text-xs font-semibold" style={{ color: 'var(--color-fg-primary)' }}>
+              <span className="text-xs font-semibold text-left sm:text-right break-words w-full sm:w-auto" style={{ color: 'var(--color-fg-primary)' }}>
                 {row.value}
               </span>
             </div>
