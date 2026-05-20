@@ -157,16 +157,16 @@ export function DestinationsSection({ onSelect }: DestinationsSectionProps) {
               className="text-xs font-semibold uppercase tracking-widest mb-3 block"
               style={{ color: 'var(--color-yellow)' }}
             >
-              destinos populares
+              destinos queridinhos
             </span>
             <h2
               className="text-serif font-normal"
               style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#F0EDE6', lineHeight: 1.2 }}
             >
-              Explore sua próxima aventura.
+              Para onde vamos dar esse vambora?
             </h2>
             <p className="mt-3 text-base" style={{ color: 'rgba(240,237,230,0.45)' }}>
-              Clique em qualquer destino para gerar o guia completo.
+              Escolha um dos destinos mais cobiçados do Brasil e planeje sua viagem na hora.
             </p>
           </div>
           <div className="hidden md:flex gap-2">

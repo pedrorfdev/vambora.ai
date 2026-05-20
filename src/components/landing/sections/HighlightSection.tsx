@@ -35,9 +35,9 @@ const PARTICLES = [
 ]
 
 const FEATURES = [
-  { icon: '🔍', title: 'Busca em tempo real', desc: 'Eventos, preços e novidades atualizados agora.' },
-  { icon: '🗺', title: 'Roteiro dia a dia', desc: 'Manhã, tarde e noite — sem você precisar pensar.' },
-  { icon: '💰', title: 'Orçamento honesto', desc: 'Estimativas reais, não aquelas que te decepcionam na viagem.' },
+  { icon: '🔍', title: 'Busca quente em tempo real', desc: 'Eventos locais, preços e novidades quentinhas agora mesmo.' },
+  { icon: '🗺', title: 'Roteiro sem dor de cabeça', desc: 'Manhã, tarde e noite planejados — sem você precisar esquentar a cabeça.' },
+  { icon: '💰', title: 'Orçamento pé no chão', desc: 'Preços de verdade, sem surpresas chatas para não estragar a viagem.' },
 ]
 
 export function HighlightSection() {
@@ -96,7 +96,7 @@ export function HighlightSection() {
               />
 
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <span className="badge-yellow text-xs mb-3 inline-block text-white">✦ destino em destaque</span>
+                <span className="badge-yellow text-xs mb-3 inline-block text-white">✦ queridinho da semana</span>
                 <h3 className="text-serif text-2xl font-bold text-white">
                   {current.name}
                 </h3>
@@ -119,17 +119,16 @@ export function HighlightSection() {
                 className="text-xs font-semibold uppercase tracking-widest mb-4 block"
                 style={{ color: 'var(--color-yellow)' }}
               >
-                inteligência de verdade
+                tecnologia sem enrolação
               </span>
               <h2
                 className="text-serif font-normal"
                 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: 'var(--color-fg-primary)', lineHeight: 1.25 }}
               >
-                Não é um gerador de texto. É um guia que pesquisa pra você.
+                Menos blá-blá-blá de IA. Mais pé na estrada de verdade.
               </h2>
               <p className="mt-4 text-base leading-relaxed" style={{ color: 'var(--color-fg-secondary)' }}>
-                Enquanto você toma aquele café, a IA tá consultando eventos reais,
-                verificando a época do ano e montando um roteiro que faz sentido.
+                Enquanto você passa aquele cafezinho, nossa tecnologia pesquisa eventos locais de verdade, confere a melhor época para visitar e calcula custos reais para você viajar sem perrengue.
               </p>
             </div>
 

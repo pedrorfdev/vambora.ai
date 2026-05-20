@@ -214,17 +214,16 @@ export function AboutSection({ onDestinationSelect }: AboutSectionProps) {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <span className="text-xs font-bold uppercase tracking-widest mb-4 block text-yellow">
-              sobre o vambora
+              quem somos
             </span>
             <h2 className="text-[clamp(2rem,4vw,3rem)] text-(--color-fg-primary) leading-[1.2] font-extrabold tracking-[-0.02em]">
-              Um guia que conhece o Brasil de verdade.
+              Roteiros reais. Sem clichês. Feito pra desbravar.
             </h2>
             <p className="mt-6 text-base md:text-lg leading-relaxed text-(--color-fg-secondary) max-w-[440px]">
-              Não é uma lista genérica. É um roteiro feito pra você — com eventos reais,
-              preços honestos e dicas que só quem foi sabe.
+              Chega de listas genéricas copiadas da internet. O Vambora monta um plano sob medida pra você — com eventos que tão rolando de verdade, estimativas de custos honestas e aquelas dicas quentes que só quem foi de verdade conhece.
             </p>
             <p className="mt-4 text-sm leading-relaxed text-(--color-fg-muted) max-w-[380px]">
-              Clique em qualquer destino no mapa para gerar um guia completo na hora.
+              Clique em qualquer pin no mapa para decolar com seu guia gerado na hora!
             </p>
 
             {/* Legenda */}
@@ -232,13 +231,13 @@ export function AboutSection({ onDestinationSelect }: AboutSectionProps) {
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full shrink-0 bg-yellow shadow-[0_0_8px_var(--color-yellow)]" />
                 <span className="text-xs text-(--color-fg-muted)">
-                  Destino popular — clique para gerar o guia
+                  Destino queridinho — clique para gerar o guia na hora
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full shrink-0 bg-[rgba(0,168,120,0.3)] border border-yellow" />
                 <span className="text-xs text-(--color-fg-muted)">
-                  Destino animado — mais visitado
+                  Destino bombando — os mais planejados da semana
                 </span>
               </div>
             </div>

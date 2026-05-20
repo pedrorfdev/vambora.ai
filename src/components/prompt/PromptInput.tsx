@@ -2,8 +2,8 @@
 // PromptInput.tsx — Tela inicial do Vambora.ai
 // ─────────────────────────────────────────────
 
-import { useRef } from 'react'
 import { motion } from 'motion/react'
+import { useRef } from 'react'
 
 interface PromptInputProps {
   prompt: string
@@ -70,11 +70,11 @@ export function PromptInput({ prompt, error, onPromptChange, onSubmit }: PromptI
         transition={{ delay: 0.2, duration: 0.6 }}
         className="w-full max-w-2xl"
       >
-        <div 
+        <div
           className={`
             rounded-2xl transition-all duration-200
             focus-within:shadow-[0_0_0_4px_var(--color-yellow-glow)]
-            ${error ? 'border-red-500/40 shadow-[0_0_0_4px_rgba(239,68,68,0.08)]' : 'focus-within:border-[var(--color-yellow-border)]'}
+            ${error ? 'border-red-500/40 shadow-[0_0_0_4px_rgba(239,68,68,0.08)]' : 'focus-within:border-yellow-border'}
           `}
           style={{
             background: 'var(--color-bg-card)',
@@ -145,7 +145,7 @@ export function PromptInput({ prompt, error, onPromptChange, onSubmit }: PromptI
               className="
                 text-xs px-4 py-2 rounded-full cursor-pointer
                 transition-all duration-200
-                hover:shadow-[var(--shadow-yellow)] hover:-translate-y-0.5
+                hover:shadow-(--shadow-yellow) hover:-translate-y-0.5
               "
               style={{
                 background: 'var(--color-bg-card)',
@@ -177,7 +177,7 @@ export function PromptInput({ prompt, error, onPromptChange, onSubmit }: PromptI
         className="mt-24 text-xs"
         style={{ color: 'var(--color-text-muted)' }}
       >
-        powered by Gemini · feito com 🇧🇷
+        powered by Gemini · feito com muito ☕ no 🇧🇷
       </motion.p>
 
     </motion.div>

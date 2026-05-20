@@ -105,7 +105,7 @@ export function LandingFooter() {
             className="text-xs"
             style={{ color: 'var(--color-fg-muted)' }}
           >
-            © 2025 vambora.ai · Feito com ☕ e 🇧🇷
+            © 2025 vambora.ai · Feito com muito ☕ no 🇧🇷
           </p>
           <p
             className="text-xs"

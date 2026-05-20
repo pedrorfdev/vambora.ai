@@ -84,7 +84,7 @@ function FanCard({ dest, index, isVisible, onSelect, hoveredIndex, setHoveredInd
       onClick={() => onSelect(dest.prompt)}
     >
       <motion.div
-        className={`absolute rounded-xl overflow-hidden w-[150px] h-[200px] left-[17.5px] bottom-0 transition-all duration-200 pointer-events-none border ${isHovered ? 'border-(--color-yellow-border) shadow-(--shadow-yellow)' : 'border-white/10 shadow-lg'}`}
+        className={`absolute rounded-xl overflow-hidden w-[150px] h-[200px] left-[17.5px] bottom-0 transition-all duration-200 pointer-events-none border ${isHovered ? 'border-yellow-border shadow-(--shadow-yellow)' : 'border-white/10 shadow-lg'}`}
         animate={{ y: isHovered ? -18 : 0, scale: isHovered ? 1.08 : 1 }}
         transition={{ duration: 0.22, ease: 'easeOut' }}
       >
@@ -167,10 +167,7 @@ export function HeroSection({ onSubmit, error, theme }: HeroSectionProps) {
         animate={isCollapsing ? { opacity: 0, scale: 0.96, transition: { duration: 0.3, delay: 0.2 } } : { opacity: 1, scale: 1 }}
       >
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="flex flex-col items-center gap-4">
-          <img src="/vambora-logo.png" alt="logo" className="w-48 sm:w-60 md:w-64 h-auto object-contain" />
-          {/* <h1 style={{ fontSize: 'clamp(3rem, 7vw, 5.5rem)', color: '#F2EEE8', lineHeight: 0.95, fontWeight: 800, letterSpacing: '-0.02em' }}>
-            vambora<span style={{ color: 'var(--color-yellow)' }}>.ai</span>
-          </h1> */}
+          <img src="/vambora-logo-white.png" alt="logo" className="w-48 sm:w-60 md:w-64 h-auto object-contain" />
           <p className={`text-[clamp(0.95rem,2vw,1.15rem)] max-w-[440px] leading-relaxed font-light ${isDark ? 'text-white/50' : 'text-zinc-800/60'}`}>
             O Brasil é grande demais pra ficar parado.{' '}
             <AnimatePresence mode="wait">
@@ -186,12 +183,12 @@ export function HeroSection({ onSubmit, error, theme }: HeroSectionProps) {
           <div className="rounded-2xl overflow-hidden bg-(--color-bg-card) border border-(--color-bg-border) backdrop-blur-xl shadow-(--shadow-card)">
             <textarea ref={textareaRef} value={prompt} onChange={e => setPrompt(e.target.value)} onKeyDown={handleKeyDown}
               placeholder={'Descreva sua viagem...\nEx: Floripa em maio, 4 dias, casal, R$2.000'} rows={3}
-              className="w-full bg-transparent resize-none outline-none leading-relaxed px-6 pt-5 pb-3 placeholder:text-text-muted text-(--color-fg-primary) text-[0.9375rem] caret-(--color-yellow) font-sans"
+              className="w-full bg-transparent resize-none outline-none leading-relaxed px-6 pt-5 pb-3 placeholder:text-text-muted text-(--color-fg-primary) text-[0.9375rem] caret-yellow font-sans"
             />
             <div className="px-4 sm:px-6 pb-3 flex flex-col sm:flex-row sm:flex-wrap gap-2">
               {QUICK_PROMPTS.map(ex => (
                 <button key={ex} onClick={() => { setPrompt(ex); textareaRef.current?.focus() }}
-                  className="text-xs px-3 py-2 sm:py-1.5 rounded-xl sm:rounded-full whitespace-normal sm:whitespace-nowrap text-left sm:text-center transition-all duration-200 bg-(--color-bg-soft) border border-(--color-bg-border) text-(--color-fg-secondary) hover:border-(--color-yellow-border) hover:text-(--color-yellow) hover:bg-(--color-yellow-glow)"
+                  className="text-xs px-3 py-2 sm:py-1.5 rounded-xl sm:rounded-full whitespace-normal sm:whitespace-nowrap text-left sm:text-center transition-all duration-200 bg-(--color-bg-soft) border border-(--color-bg-border) text-(--color-fg-secondary) hover:border-yellow-border hover:text-yellow hover:bg-yellow-glow"
                 >
                   {ex}
                 </button>
@@ -209,8 +206,8 @@ export function HeroSection({ onSubmit, error, theme }: HeroSectionProps) {
               </button>
             </div>
           </div>
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }} className="mt-3 text-center text-[0.68rem] tracking-wider text-white/30 dark:text-white/30 text-zinc-500/50">
-            ou escolha um destino abaixo
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }} className="mt-3 text-center text-[0.68rem] tracking-wider dark:text-white/30 text-zinc-500/50">
+            ou escolha um queridinho abaixo 👇
           </motion.p>
         </motion.div>
       </motion.div>
@@ -228,8 +225,8 @@ export function HeroSection({ onSubmit, error, theme }: HeroSectionProps) {
       </motion.div>
 
       <motion.div className="absolute right-6 bottom-6 flex flex-col items-center gap-2 z-30" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}>
-        <motion.div animate={{ y: [0, 4, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} className="text-white/20 dark:text-white/20 text-zinc-500/30 text-[0.7rem]">↓</motion.div>
-        <span className="text-[0.6rem] tracking-[0.14em] uppercase [writing-mode:vertical-rl] text-white/20 dark:text-white/20 text-zinc-500/30">explorar</span>
+        <motion.div animate={{ y: [0, 4, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} className="text-white/20 dark:text-white/20 text-xs">↓</motion.div>
+        <span className="text-[0.6rem] tracking-[0.14em] uppercase [writing-mode:vertical-rl] text-white/20 dark:text-white/20">explorar</span>
       </motion.div>
     </section>
   )

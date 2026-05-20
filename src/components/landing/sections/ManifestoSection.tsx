@@ -136,7 +136,7 @@ export function ManifestoSection() {
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="btn-primary"
           >
-            Começar agora →
+            Bora planejar! →
           </button>
         </motion.div>
       </div>
