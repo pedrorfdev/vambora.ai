@@ -143,7 +143,7 @@ export function DestinationsSection({ onSelect }: DestinationsSectionProps) {
   }
 
   return (
-    <section className="py-28 overflow-hidden" style={{ background: '#0A0A0A' }}>
+    <section id="destinos" className="py-28 overflow-hidden" style={{ background: '#0A0A0A' }}>
       <div className="max-w-7xl mx-auto px-8">
         <motion.div
           ref={titleRef}

@@ -57,12 +57,13 @@ export function LandingFooter() {
               >
                 Gerar guia
               </button>
-              <span
-                className="text-sm"
-                style={{ color: 'var(--color-fg-secondary)' }}
+              <button
+                onClick={() => document.getElementById('destinos')?.scrollIntoView({ behavior: 'smooth' })}
+                className="text-sm text-left hover:text-yellow transition-colors"
+                style={{ color: 'var(--color-fg-secondary)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
                 Destinos
-              </span>
+              </button>
             </div>
             <div className="flex flex-col gap-3">
               <p
