@@ -231,7 +231,7 @@ export function AboutSection({ onDestinationSelect }: AboutSectionProps) {
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full shrink-0 bg-yellow shadow-[0_0_8px_var(--color-yellow)]" />
                 <span className="text-xs text-(--color-fg-muted)">
-                  Destino queridinho — clique para gerar o guia na hora
+                  Destino recomendado — clique para planejar na hora
                 </span>
               </div>
               <div className="flex items-center gap-3">

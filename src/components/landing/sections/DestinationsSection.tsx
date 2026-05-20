@@ -157,7 +157,7 @@ export function DestinationsSection({ onSelect }: DestinationsSectionProps) {
               className="text-xs font-semibold uppercase tracking-widest mb-3 block"
               style={{ color: 'var(--color-yellow)' }}
             >
-              destinos queridinhos
+              destinos imperdíveis
             </span>
             <h2
               className="text-serif font-normal"

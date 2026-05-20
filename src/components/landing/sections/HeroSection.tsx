@@ -207,7 +207,7 @@ export function HeroSection({ onSubmit, error, theme }: HeroSectionProps) {
             </div>
           </div>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }} className="mt-3 text-center text-[0.68rem] tracking-wider dark:text-white/30 text-zinc-500/50">
-            ou escolha um queridinho abaixo 👇
+            ou escolha um destino abaixo 👇
           </motion.p>
         </motion.div>
       </motion.div>
